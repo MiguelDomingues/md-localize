@@ -37,14 +37,3 @@ jobs:
         mv publish/windows/MarkdownLocalize.CLI.exe publish/md-localize-windows.exe
         mv publish/osx/MarkdownLocalize.CLI publish/md-localize-osx
         mv publish/linux/MarkdownLocalize.CLI publish/md-localize-linux
-
-    - name: Release
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        prerelease: true
-        files: |
-          publish/md-localize-linux
-          publish/md-localize-osx
-          publish/md-localize-windows.exe
