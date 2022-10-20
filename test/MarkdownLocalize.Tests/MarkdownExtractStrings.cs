@@ -106,6 +106,7 @@ public class MarkdownExtractStrings
     [Fact]
     public void ImageAlt()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         IEnumerable<string> strings = MarkdownParser.ExtractStrings("![Landscape](./images/some-image.png)", null).Select(si => si.String);
         Assert.Equal(new[] { "Landscape" }, strings);
     }
@@ -263,6 +264,7 @@ with some text after.", null).Select(si => si.String);
     [Fact]
     public void CodeInlineWithTextEnd()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         IEnumerable<string> strings = MarkdownParser.ExtractStrings(@"`a = b` is a good example", null).Select(si => si.String);
         Assert.Equal(new[] { "`a = b` is a good example" }, strings);
     }
@@ -303,6 +305,7 @@ This is a simple assign.", null).Select(si => si.String);
     [Fact]
     public void Quote()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         IEnumerable<string> strings = MarkdownParser.ExtractStrings(@"- An item
 
     > with
