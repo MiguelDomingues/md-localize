@@ -71,6 +71,7 @@ public class MarkdownExtractStrings
     [Fact]
     public void Bold()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         IEnumerable<string> strings = MarkdownParser.ExtractStrings("This sentenced has some **bold** text.", null).Select(si => si.String);
         Assert.Equal(new[] { "This sentenced has some **bold** text." }, strings);
     }
