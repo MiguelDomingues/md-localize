@@ -1,0 +1,50 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish
+      run: |
+        mkdir publish
+        dotnet publish --no-restore -c Release -o ./publish/windows -r win10-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
+        dotnet publish --no-restore -c Release -o ./publish/osx -r osx.10.11-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
+        dotnet publish --no-restore -c Release -o ./publish/linux -r linux-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
+        mv publish/windows/MarkdownLocalize.CLI.exe publish/md-localize-windows.exe
+        mv publish/osx/MarkdownLocalize.CLI publish/md-localize-osx
+        mv publish/linux/MarkdownLocalize.CLI publish/md-localize-linux
+
+    - name: Release
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        files: |
+          publish/md-localize-linux
+          publish/md-localize-osx
+          publish/md-localize-windows.exe

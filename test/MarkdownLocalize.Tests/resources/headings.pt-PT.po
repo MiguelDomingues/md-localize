@@ -1,0 +1,26 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 1987-05-13 20:45+0000\n"
+"Project-Id-Version: Markdown POT\n"
+"X-Generator: Markdown POT\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: pt-PT\n"
+
+msgctxt "Front Matter property 'tag'"
+msgid "Hello"
+msgstr "Olá"
+
+msgctxt "Text"
+msgid "Heading"
+msgstr "Título"
+
+msgctxt "Heading (level 1)"
+msgid "Heading"
+msgstr "Título"
+
+msgctxt "Heading (level 2)"
+msgid "Another Heading"
+msgstr "Outro Título"

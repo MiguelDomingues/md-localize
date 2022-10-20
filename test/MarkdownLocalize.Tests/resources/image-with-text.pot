@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 1987-05-13 20:45+0000\n"
+"Project-Id-Version: Markdown POT\n"
+"X-Generator: Markdown POT\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+
+#: resources/image-with-text.md:1
+msgctxt "Heading (level 1)"
+msgid "Image and Text"
+msgstr ""
+
+#: resources/image-with-text.md:3
+msgctxt "Text"
+msgid "An Image"
+msgstr ""
+
+#: resources/image-with-text.md:4 resources/image-with-text.md:7
+msgctxt "Image alternative text"
+msgid "alt text"
+msgstr ""
+
+#: resources/image-with-text.md:6
+msgctxt "Text"
+msgid "Text"
+msgstr ""

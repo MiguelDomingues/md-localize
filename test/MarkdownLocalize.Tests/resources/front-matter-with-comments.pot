@@ -1,0 +1,29 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 1987-05-13 20:45+0000\n"
+"Project-Id-Version: Markdown POT\n"
+"X-Generator: Markdown POT\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+
+#: resources/front-matter.md:1
+msgctxt "Front Matter property 'description'"
+msgid "This text should be translated"
+msgstr ""
+
+#: resources/front-matter.md:1
+msgctxt "Front Matter property 'tags'"
+msgid "First"
+msgstr ""
+
+#: resources/front-matter.md:1
+msgctxt "Front Matter property 'tags'"
+msgid "Second"
+msgstr ""
+
+#  an extra comment
+#: resources/front-matter.md:9
+msgctxt "Heading (level 1)"
+msgid "Heading"
+msgstr ""

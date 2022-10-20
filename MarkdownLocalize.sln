@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{63951C94-2787-4C93-B557-9434C8EB8533}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownLocalize.CLI", "src\MarkdownLocalize.CLI\MarkdownLocalize.CLI.csproj", "{1AC492C4-5608-43DF-A50A-C316B3787D6C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{960E0803-FBB4-46C0-AB6E-D7D2D4D529E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownLocalize.Tests", "test\MarkdownLocalize.Tests\MarkdownLocalize.Tests.csproj", "{B2B9F204-29B0-41FF-838F-12DB349214D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownLocalize.Utils", "src\MarkdownLocalize.Utils\MarkdownLocalize.Utils.csproj", "{5FE334D2-2689-467D-B002-3C1C1C4AD80D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownLocalize.POT", "src\MarkdownLocalize.POT\MarkdownLocalize.POT.csproj", "{C4379B73-A208-40E1-A7F2-573DDC2D9052}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownLocalize.Markdown", "src\MarkdownLocalize.Markdown\MarkdownLocalize.Markdown.csproj", "{62206861-68AB-4A98-8995-CE4162D2C602}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.Translate", "src\Google.Translate\Google.Translate.csproj", "{CBF653CC-EAB8-4259-B793-D5DC2C827506}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1AC492C4-5608-43DF-A50A-C316B3787D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AC492C4-5608-43DF-A50A-C316B3787D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AC492C4-5608-43DF-A50A-C316B3787D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC492C4-5608-43DF-A50A-C316B3787D6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2B9F204-29B0-41FF-838F-12DB349214D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B9F204-29B0-41FF-838F-12DB349214D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2B9F204-29B0-41FF-838F-12DB349214D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B9F204-29B0-41FF-838F-12DB349214D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FE334D2-2689-467D-B002-3C1C1C4AD80D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FE334D2-2689-467D-B002-3C1C1C4AD80D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FE334D2-2689-467D-B002-3C1C1C4AD80D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FE334D2-2689-467D-B002-3C1C1C4AD80D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4379B73-A208-40E1-A7F2-573DDC2D9052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4379B73-A208-40E1-A7F2-573DDC2D9052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4379B73-A208-40E1-A7F2-573DDC2D9052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4379B73-A208-40E1-A7F2-573DDC2D9052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62206861-68AB-4A98-8995-CE4162D2C602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62206861-68AB-4A98-8995-CE4162D2C602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62206861-68AB-4A98-8995-CE4162D2C602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62206861-68AB-4A98-8995-CE4162D2C602}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF653CC-EAB8-4259-B793-D5DC2C827506}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF653CC-EAB8-4259-B793-D5DC2C827506}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF653CC-EAB8-4259-B793-D5DC2C827506}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF653CC-EAB8-4259-B793-D5DC2C827506}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1AC492C4-5608-43DF-A50A-C316B3787D6C} = {63951C94-2787-4C93-B557-9434C8EB8533}
+		{B2B9F204-29B0-41FF-838F-12DB349214D1} = {960E0803-FBB4-46C0-AB6E-D7D2D4D529E5}
+		{5FE334D2-2689-467D-B002-3C1C1C4AD80D} = {63951C94-2787-4C93-B557-9434C8EB8533}
+		{C4379B73-A208-40E1-A7F2-573DDC2D9052} = {63951C94-2787-4C93-B557-9434C8EB8533}
+		{62206861-68AB-4A98-8995-CE4162D2C602} = {63951C94-2787-4C93-B557-9434C8EB8533}
+		{CBF653CC-EAB8-4259-B793-D5DC2C827506} = {63951C94-2787-4C93-B557-9434C8EB8533}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,23 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 1987-05-13 20:45+0000\n"
+"Project-Id-Version: Markdown POT\n"
+"X-Generator: Markdown POT\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+
+#: resources/repeated-strings.md:1
+msgctxt "Heading (level 1)"
+msgid "Heading"
+msgstr ""
+
+#: resources/repeated-strings.md:3
+msgctxt "Heading (level 2)"
+msgid "Another"
+msgstr ""
+
+#: resources/repeated-strings.md:5
+msgctxt "Heading (level 3)"
+msgid "Heading"
+msgstr ""

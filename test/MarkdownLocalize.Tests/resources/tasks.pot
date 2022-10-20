@@ -1,0 +1,23 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 1987-05-13 20:45+0000\n"
+"Project-Id-Version: Markdown POT\n"
+"X-Generator: Markdown POT\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+
+#: resources/tasks.md:1
+msgctxt "Heading (level 1)"
+msgid "Task list"
+msgstr ""
+
+#: resources/tasks.md:3
+msgctxt "Text"
+msgid "Issue #739"
+msgstr ""
+
+#: resources/tasks.md:7
+msgctxt "Text"
+msgid "Add delight to the experience when all tasks are complete :tada:"
+msgstr ""
