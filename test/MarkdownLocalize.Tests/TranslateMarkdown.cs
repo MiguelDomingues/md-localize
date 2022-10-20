@@ -14,10 +14,10 @@ public class TranslateMarkdown
     }
 
     [Theory]
+    [InlineData("headings.pt-PT.po", "---\ntag: Hello\n---\n\n# Heading\n\n## New Heading", "---\ntag: Olá\n---\n\n# Título\n\n## ", 3, 2)]
     [InlineData("headings.pt-PT.po", "# Heading", "# Título", 1, 1)]
     [InlineData("headings.pt-PT.po", "# Heading\n\n## Another Heading", "# Título\n\n## Outro Título", 2, 2)]
     [InlineData("headings.pt-PT.po", "# Heading\n\n## New Heading", "# Título\n\n## ", 2, 1)]
-    [InlineData("headings.pt-PT.po", "---\ntag: Hello\n---\n\n# Heading\n\n## New Heading", "---\ntag: Olá\n---\n\n# Título\n\n## ", 3, 2)]
     public void TranslateSimple(string poFile, string originalMarkdown, string translatedMarkdown, int expectedTotalCount, int expectedTranslatedCount)
     {
         MarkdownParser.SetParserOptions(new RendererOptions()
