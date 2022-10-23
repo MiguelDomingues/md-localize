@@ -13,8 +13,8 @@ The diagram below shows the process when using this tool:
 flowchart LR
    
     subgraph Rebuild Markdown
-    locale.po-->lmd1[./markdown-pot ARGS<br />&nbsp;&nbsp;&nbsp;&nbsp;-action translate<br />&nbsp;&nbsp;&nbsp;&nbsp;-i markdown1.md<br />&nbsp;&nbsp;&nbsp;&nbsp;-po locale.po<br />&nbsp;&nbsp;&nbsp;&nbsp;-o locale/markdown1.pot]
-    locale.po-->lmd2[./markdown-pot ARGS<br />&nbsp;&nbsp;&nbsp;&nbsp;-action translate<br />&nbsp;&nbsp;&nbsp;&nbsp;-i markdown2.md<br />&nbsp;&nbsp;&nbsp;&nbsp;-po locale.po<br />&nbsp;&nbsp;&nbsp;&nbsp;-o locale/markdown2.pot]
+    locale.po-->lmd1[./markdown-pot ARGS<br />    -action translate<br />    -i markdown1.md<br />     -po locale.po<br />    -o locale/markdown1.pot]
+    locale.po-->lmd2[./markdown-pot ARGS<br />    -action translate<br />    -i markdown2.md<br />     -po locale.po<br />    -o locale/markdown2.pot]
     style lmd1 text-align:left
     style lmd2 text-align:left
     end
@@ -22,8 +22,8 @@ flowchart LR
     tr[Use third-party<br />translation tool]-->locale.po
     end
     subgraph Extract Strings
-    md1[./markdown-pot ARGS<br />&nbsp;&nbsp;&nbsp;&nbsp;-action generate-pot<br />&nbsp;&nbsp;&nbsp;&nbsp;-i markdown1.md<br />&nbsp;&nbsp;&nbsp;&nbsp;-o strings.pot]-->strings.pot
-    md2[./markdown-pot ARGS<br />&nbsp;&nbsp;&nbsp;&nbsp;-action generate-pot<br />&nbsp;&nbsp;&nbsp;&nbsp;-i markdown1.md<br />&nbsp;&nbsp;&nbsp;&nbsp;-o strings.pot]-->strings.pot
+    md1[./markdown-pot ARGS<br />    -action generate-pot<br />    -i markdown1.md<br />    -o strings.pot]-->strings.pot
+    md2[./markdown-pot ARGS<br />    -action generate-pot<br />    -i markdown1.md<br />    -o strings.pot]-->strings.pot
     style md1 text-align:left
     style md2 text-align:left
     end
