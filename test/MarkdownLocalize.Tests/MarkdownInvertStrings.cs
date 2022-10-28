@@ -25,4 +25,30 @@ public class MarkdownInvertString
         Assert.Equal("# 1 gnidaeH\n\n## 2 gnidaeH", md);
     }
 
+    [Theory]
+    [InlineData("![abc](./images/some-image.png)", "![cba](../../../original-doc-path/images/some-image.png)")]
+    [InlineData("![abc](images/some-image.png)", "![cba](../../../original-doc-path/images/some-image.png)")]
+    [InlineData("The image ![abc](./images/some-image.png)", "egami ehT ![abc](../../../original-doc-path/images/some-image.png)")]
+    public void UpdateImageRelativePath(string source, string expected)
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            ImageRelativePath = "../../../original-doc-path/",
+        });
+        string md = MarkdownParser.Translate(source, InvertString, null, out _);
+        Assert.Equal(expected, md);
+    }
+
+    [Theory]
+    [InlineData("![abc](./images/some-image.png)", "![abc](../../../original-doc-path/images/some-image.png)")]
+    public void UpdateImageRelativePathSkipAlt(string source, string expected)
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            ImageRelativePath = "../../../original-doc-path/",
+            SkipImageAlt = true,
+        });
+        string md = MarkdownParser.Translate(source, InvertString, null, out _);
+        Assert.Equal(expected, md);
+    }
 }

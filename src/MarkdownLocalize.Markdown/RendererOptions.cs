@@ -21,4 +21,7 @@ public class RendererOptions
     public bool ParseHtml = false;
 
     public bool EnablePipeTables { get; set; }
+
+    public string ImageRelativePath { get; set; } = null;
+    public string LinkRelativePath { get; set; } = null;
 }

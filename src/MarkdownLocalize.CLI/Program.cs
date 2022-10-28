@@ -81,6 +81,12 @@ namespace MarkdownLocalize.CLI
         [Option("--google-project-id|-gid", "Google Cloud console Project ID.", CommandOptionType.SingleValue)]
         public string GoogleProjectId { get; } = null;
 
+        [Option("--update-image-relative-paths", "Update images relative paths to refer original files.", CommandOptionType.NoValue)]
+        public bool UpdateImageRelativePaths { get; } = false;
+
+        [Option("--update-links-relative-paths", "Update links relative paths to refer original files.", CommandOptionType.NoValue)]
+        public bool UpdateLinksRelativePaths { get; } = false;
+
 
         private int OnExecute()
         {
@@ -207,6 +213,12 @@ namespace MarkdownLocalize.CLI
 
         private void InitMarkdownParserOptions()
         {
+            string relativePathOutput = null;
+            if (Input != null && Output != null && Input != "" && Output != "")
+            {
+                relativePathOutput = Path.GetRelativePath(Input, Output);
+            }
+
             MarkdownParser.SetParserOptions(new RendererOptions()
             {
                 EnableGitHubFlavoredMarkdownTaskLists = GitHubFlavoredMarkdownTaskLists,
@@ -218,6 +230,8 @@ namespace MarkdownLocalize.CLI
                 IgnorePatterns = IgnorePatterns,
                 OnlyPatterns = OnlyPatterns,
                 ParseHtml = ParseHtml,
+                ImageRelativePath = UpdateImageRelativePaths ? relativePathOutput : null,
+                LinkRelativePath = UpdateLinksRelativePaths ? relativePathOutput : null,
             });
         }
 

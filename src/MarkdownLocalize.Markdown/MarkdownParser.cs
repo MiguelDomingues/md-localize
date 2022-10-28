@@ -1,7 +1,7 @@
-﻿using Markdig;
-using Markdig.Renderers.Normalize;
+﻿using System.Text.RegularExpressions;
+using Markdig;
 using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
+using MarkdownLocalize.Utils;
 using static MarkdownLocalize.Markdown.TranslateRenderer;
 
 namespace MarkdownLocalize.Markdown;
@@ -10,7 +10,8 @@ public class MarkdownParser
     public static MarkdownPipeline? _markdownPipeline { get; private set; }
 
     static RendererOptions options = new RendererOptions();
-
+    private static string REGEX_IMAGE = @"(!\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
+    private static string REGEX_LINK = @"([^!]\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
 
     public static void SetParserOptions(RendererOptions newOptions)
     {
@@ -50,9 +51,45 @@ public class MarkdownParser
             var document = Markdig.Markdown.Parse(markdown, GetPipeline());
             renderer.Render(document);
             tInfo = renderer.Info;
-            return writer.ToString();
+            string renderedMarkdown = writer.ToString();
+            if (options.ImageRelativePath != null)
+                renderedMarkdown = UpdateRelativePaths(REGEX_IMAGE, renderedMarkdown, options.ImageRelativePath);
+            if (options.LinkRelativePath != null)
+                renderedMarkdown = UpdateRelativePaths(REGEX_LINK, renderedMarkdown, options.LinkRelativePath);
+
+            return renderedMarkdown;
         }
 
+    }
+
+    private static string UpdateRelativePaths(string pattern, string original, string relativePath)
+    {
+        MatchEvaluator evaluator = new MatchEvaluator((Match m) =>
+        {
+            return MatchReplacer(relativePath, m);
+        });
+        try
+        {
+            return Regex.Replace(original, pattern, evaluator,
+                                            RegexOptions.Multiline | RegexOptions.Singleline
+                                            );
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            throw new Exception("Unable to update relative paths.");
+        }
+    }
+
+    private static string MatchReplacer(string path, Match match)
+    {
+        string newString = match.Groups[1].Value;
+
+        string newPath = PathUtils.SimplifyRelativePath(Path.Combine(path, match.Groups[2].Value));
+        newString += newPath;
+
+        newString += match.Groups[3].Value + match.Groups[4].Value;
+
+        return newString;
     }
 
     private static MarkdownPipeline GetPipeline()

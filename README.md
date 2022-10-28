@@ -170,3 +170,13 @@ Examples: pt-BR, ja-JP
 
 Path to Google translate .json credentials file.
 The file is obtained from a service account in the Google Cloud Console.
+
+### --update-image-relative-paths
+
+Flag to enable updating relative paths to images to point to the original image.
+Only used when `translate` action is specified.
+
+### --update-links-relative-paths
+
+Flag to enable updating relative paths to other files (not images) to point to the original file.
+Only used when `translate` action is specified.
