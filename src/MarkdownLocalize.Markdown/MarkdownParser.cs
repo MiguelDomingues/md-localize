@@ -11,7 +11,7 @@ public class MarkdownParser
 
     static RendererOptions options = new RendererOptions();
     private static string REGEX_IMAGE = @"(!\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
-    private static string REGEX_LINK = @"([^!]\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
+    private static string REGEX_LINK = @"([^!]?\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
 
     public static void SetParserOptions(RendererOptions newOptions)
     {
@@ -84,8 +84,15 @@ public class MarkdownParser
     {
         string newString = match.Groups[1].Value;
 
-        string newPath = PathUtils.SimplifyRelativePath(Path.Combine(path, match.Groups[2].Value));
-        newString += newPath;
+        if (match.Groups[2].Value.StartsWith("http"))
+        {
+            newString += match.Groups[2].Value;
+        }
+        else
+        {
+            string newPath = PathUtils.SimplifyRelativePath(Path.Combine(path, match.Groups[2].Value));
+            newString += newPath;
+        }
 
         newString += match.Groups[3].Value + match.Groups[4].Value;
 

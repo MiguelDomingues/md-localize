@@ -51,4 +51,19 @@ public class MarkdownInvertString
         string md = MarkdownParser.Translate(source, InvertString, null, out _);
         Assert.Equal(expected, md);
     }
+
+    [Theory]
+    [InlineData("[abc](https://example.com/image.png)", "[cba](https://example.com/image.png)")]
+    [InlineData("![abc](https://example.com/image.png)", "![cba](https://example.com/image.png)")]
+    [InlineData("[abc](./image.png)", "[cba](../../../original-doc-path/image.png)")]
+    public void UpdateLinkRelativePath(string source, string expected)
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            ImageRelativePath = "../../../original-doc-path/",
+            LinkRelativePath = "../../../original-doc-path/",
+        });
+        string md = MarkdownParser.Translate(source, InvertString, null, out _);
+        Assert.Equal(expected, md);
+    }
 }
