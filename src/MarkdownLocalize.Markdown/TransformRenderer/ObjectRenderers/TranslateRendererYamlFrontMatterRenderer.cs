@@ -18,10 +18,13 @@ namespace MarkdownLocalize.Markdown
 
                 object newYaml = Convert(renderer, null, yamlObject);
 
+                Dictionary<object, object> dict = (Dictionary<object, object>)newYaml;
                 if (renderer.Options.FrontMatterSourceKey != null)
-                {
-                    Dictionary<object, object> dict = (Dictionary<object, object>)newYaml;
                     dict[renderer.Options.FrontMatterSourceKey] = renderer.PathToSource;
+
+                if (dict.ContainsKey("locale") && renderer.Locale != "")
+                {
+                    dict["locale"] = renderer.Locale;
                 }
 
                 string yamlText = new SerializerBuilder()

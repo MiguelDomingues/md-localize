@@ -25,4 +25,6 @@ public class RendererOptions
     public string ImageRelativePath { get; set; } = null;
     public string LinkRelativePath { get; set; } = null;
     public string FrontMatterSourceKey { get; set; }
+    public bool UpdateFrontMatterLocale { get; set; }
+    public string Locale { get; set; }
 }

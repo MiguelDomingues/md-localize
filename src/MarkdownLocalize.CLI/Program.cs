@@ -90,6 +90,10 @@ namespace MarkdownLocalize.CLI
         [Option("--add-front-matter-source", "Add a new key (specified as parameter) to the front matter with the relative path to the source file.", CommandOptionType.SingleValue)]
         public string FrontMatterSourceKey { get; } = null;
 
+        [Option("--update-front-matter-locale", "Update locale in front matter.", CommandOptionType.NoValue)]
+        public bool UpdateFrontMatterLocale { get; } = false;
+
+
         private int OnExecute()
         {
             InitMarkdownParserOptions();
@@ -241,6 +245,7 @@ namespace MarkdownLocalize.CLI
                 OnlyPatterns = OnlyPatterns,
                 ParseHtml = ParseHtml,
                 FrontMatterSourceKey = FrontMatterSourceKey,
+                UpdateFrontMatterLocale = UpdateFrontMatterLocale,
             });
         }
 

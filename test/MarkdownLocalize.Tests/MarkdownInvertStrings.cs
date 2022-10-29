@@ -14,14 +14,14 @@ public class MarkdownInvertString
     [Fact]
     public void HeadingSingle()
     {
-        string md = MarkdownParser.Translate("# Heading 1", InvertString, null, null, out _);
+        string md = MarkdownParser.Translate("# Heading 1", InvertString, null, null, null, out _);
         Assert.Equal("# 1 gnidaeH", md);
     }
 
     [Fact]
     public void HeadingMultiple()
     {
-        string md = MarkdownParser.Translate("# Heading 1\n\n## Heading 2", InvertString, null, null, out _);
+        string md = MarkdownParser.Translate("# Heading 1\n\n## Heading 2", InvertString, null, null, null, out _);
         Assert.Equal("# 1 gnidaeH\n\n## 2 gnidaeH", md);
     }
 
@@ -35,7 +35,7 @@ public class MarkdownInvertString
         {
             ImageRelativePath = "../../../original-doc-path/",
         });
-        string md = MarkdownParser.Translate(source, InvertString, null, null, out _);
+        string md = MarkdownParser.Translate(source, InvertString, null, null, null, out _);
         Assert.Equal(expected, md);
     }
 
@@ -48,7 +48,7 @@ public class MarkdownInvertString
             ImageRelativePath = "../../../original-doc-path/",
             SkipImageAlt = true,
         });
-        string md = MarkdownParser.Translate(source, InvertString, null, null, out _);
+        string md = MarkdownParser.Translate(source, InvertString, null, null, null, out _);
         Assert.Equal(expected, md);
     }
 
@@ -63,7 +63,7 @@ public class MarkdownInvertString
             ImageRelativePath = "../../../original-doc-path/",
             LinkRelativePath = "../../../original-doc-path/",
         });
-        string md = MarkdownParser.Translate(source, InvertString, null, null, out _);
+        string md = MarkdownParser.Translate(source, InvertString, null, null, null, out _);
         Assert.Equal(expected, md);
     }
 }

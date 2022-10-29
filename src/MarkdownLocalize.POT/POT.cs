@@ -155,7 +155,7 @@ public class POT
             var key = new POKey(NormalizeLineBreaks(si.String), null, si.Context);
             string translation = catalog.GetTranslation(key);
             return translation != null ? translation.Trim() : null;
-        }, fileName, pathToSource, out info);
+        }, fileName, pathToSource, catalog.Language, out info);
 
         return translatedMarkdown;
     }

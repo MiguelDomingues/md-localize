@@ -43,11 +43,11 @@ public class MarkdownParser
 
     }
 
-    public static string Translate(string markdown, Func<StringInfo, string> func, string fileName, string pathToSource, out TranslationInfo tInfo)
+    public static string Translate(string markdown, Func<StringInfo, string> func, string fileName, string pathToSource, string locale, out TranslationInfo tInfo)
     {
         using (var writer = new StringWriter())
         {
-            var renderer = new TranslateRenderer(writer, markdown, func, fileName, Options, pathToSource);
+            var renderer = new TranslateRenderer(writer, markdown, func, fileName, Options, pathToSource, locale);
             var document = Markdig.Markdown.Parse(markdown, GetPipeline());
             renderer.Render(document);
             tInfo = renderer.Info;

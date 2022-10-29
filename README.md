@@ -185,3 +185,7 @@ Only used when `translate` action is specified.
 
 Add '<KEY>' to front-matter with the relative path to the source markdown file.
 Only relevant when the action is set to `translate`.
+
+### --update-front-matter-locale
+
+If a 'locale' key exists in front-matter, update it to the locale being translated.

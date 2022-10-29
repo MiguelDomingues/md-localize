@@ -12,7 +12,7 @@ namespace MarkdownLocalize.Markdown
             MissingStrings = new HashSet<string>(),
         };
 
-        public TranslateRenderer(TextWriter writer, string originalMarkdown, Func<StringInfo, string> func, string fileName, RendererOptions opts, string pathToSource) : base(writer, originalMarkdown, fileName, opts, pathToSource)
+        public TranslateRenderer(TextWriter writer, string originalMarkdown, Func<StringInfo, string> func, string fileName, RendererOptions opts, string pathToSource, string locale) : base(writer, originalMarkdown, fileName, opts, pathToSource, locale)
         {
             this._translateFunction = func;
         }
