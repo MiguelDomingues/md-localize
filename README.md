@@ -180,3 +180,8 @@ Only used when `translate` action is specified.
 
 Flag to enable updating relative paths to other files (not images) to point to the original file.
 Only used when `translate` action is specified.
+
+### --add-front-matter-source <KEY>
+
+Add '<KEY>' to front-matter with the relative path to the source markdown file.
+Only relevant when the action is set to `translate`.

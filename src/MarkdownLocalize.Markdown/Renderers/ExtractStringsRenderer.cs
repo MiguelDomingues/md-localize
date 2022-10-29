@@ -5,7 +5,7 @@ namespace MarkdownLocalize.Markdown
 
         public IEnumerable<StringInfo> ExtractedStrings { get; set; } = new List<StringInfo>();
 
-        public ExtractStringsRenderer(TextWriter writer, string originalMarkdown, string fileName, RendererOptions opts) : base(writer, originalMarkdown, fileName, opts)
+        public ExtractStringsRenderer(TextWriter writer, string originalMarkdown, string fileName, RendererOptions opts) : base(writer, originalMarkdown, fileName, opts, null)
         {
         }
 

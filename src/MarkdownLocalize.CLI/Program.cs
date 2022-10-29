@@ -87,6 +87,8 @@ namespace MarkdownLocalize.CLI
         [Option("--update-links-relative-paths", "Update links relative paths to refer original files.", CommandOptionType.NoValue)]
         public bool UpdateLinksRelativePaths { get; } = false;
 
+        [Option("--add-front-matter-source", "Add a new key (specified as parameter) to the front matter with the relative path to the source file.", CommandOptionType.SingleValue)]
+        public string FrontMatterSourceKey { get; } = null;
 
         private int OnExecute()
         {
@@ -148,7 +150,8 @@ namespace MarkdownLocalize.CLI
             string po = File.ReadAllText(inputPO);
             var catalog = POT.Load(po);
             TranslationInfo info;
-            string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, out info);
+            string relativeToSource = Path.GetRelativePath(Path.GetDirectoryName(outputMarkdown), inputMarkdown).Replace("\\", "/");
+            string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, out info);
             Log(string.Format(TRANSLATION_INFO, info.TranslatedCount, info.TotalCount));
             int ratio = (int)(info.TranslatedCount * 1.0 / info.TotalCount * 100);
             if (ratio >= MinRatio)
@@ -237,6 +240,7 @@ namespace MarkdownLocalize.CLI
                 IgnorePatterns = IgnorePatterns,
                 OnlyPatterns = OnlyPatterns,
                 ParseHtml = ParseHtml,
+                FrontMatterSourceKey = FrontMatterSourceKey,
             });
         }
 

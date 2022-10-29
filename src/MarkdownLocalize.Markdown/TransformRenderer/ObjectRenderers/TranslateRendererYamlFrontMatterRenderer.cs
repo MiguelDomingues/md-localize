@@ -18,6 +18,12 @@ namespace MarkdownLocalize.Markdown
 
                 object newYaml = Convert(renderer, null, yamlObject);
 
+                if (renderer.Options.FrontMatterSourceKey != null)
+                {
+                    Dictionary<object, object> dict = (Dictionary<object, object>)newYaml;
+                    dict[renderer.Options.FrontMatterSourceKey] = renderer.PathToSource;
+                }
+
                 string yamlText = new SerializerBuilder()
                     .WithIndentedSequences()
                     .Build()

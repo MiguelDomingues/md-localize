@@ -3,7 +3,7 @@ namespace MarkdownLocalize.Markdown
     public partial class EchoRenderer : TransformRenderer
     {
 
-        public EchoRenderer(TextWriter writer, string originalMarkdown, RendererOptions opts) : base(writer, originalMarkdown, null, opts)
+        public EchoRenderer(TextWriter writer, string originalMarkdown, RendererOptions opts) : base(writer, originalMarkdown, null, opts, null)
         {
         }
 

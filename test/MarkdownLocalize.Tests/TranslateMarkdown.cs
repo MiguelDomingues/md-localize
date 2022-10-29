@@ -26,7 +26,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO(poFile));
         TranslationInfo info;
-        string md = POT.Translate(catalog, originalMarkdown, null, out info);
+        string md = POT.Translate(catalog, originalMarkdown, null, null, out info);
 
         Assert.Equal(translatedMarkdown, md);
         Assert.Equal(expectedTotalCount, info.TotalCount);
@@ -44,7 +44,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO(poFile));
         TranslationInfo info;
-        string md = POT.Translate(catalog, originalMarkdown, null, out info);
+        string md = POT.Translate(catalog, originalMarkdown, null, null, out info);
 
         Assert.Equal(translatedMarkdown, md);
         Assert.Equal(expectedTotalCount, info.TotalCount);

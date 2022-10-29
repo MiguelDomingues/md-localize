@@ -3,6 +3,8 @@ namespace MarkdownLocalize.Markdown
     public partial class TranslateRenderer : TransformRenderer
     {
         private readonly Func<StringInfo, string> _translateFunction;
+
+
         public TranslationInfo Info = new TranslationInfo
         {
             TranslatedCount = 0,
@@ -10,7 +12,7 @@ namespace MarkdownLocalize.Markdown
             MissingStrings = new HashSet<string>(),
         };
 
-        public TranslateRenderer(TextWriter writer, string originalMarkdown, Func<StringInfo, string> func, string fileName, RendererOptions opts) : base(writer, originalMarkdown, fileName, opts)
+        public TranslateRenderer(TextWriter writer, string originalMarkdown, Func<StringInfo, string> func, string fileName, RendererOptions opts, string pathToSource) : base(writer, originalMarkdown, fileName, opts, pathToSource)
         {
             this._translateFunction = func;
         }

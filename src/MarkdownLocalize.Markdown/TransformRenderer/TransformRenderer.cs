@@ -10,11 +10,12 @@ namespace MarkdownLocalize.Markdown
 {
     public abstract partial class TransformRenderer : TextRendererBase<TransformRenderer>
     {
-        public TransformRenderer(TextWriter writer, string originalMarkdown, string fileName, RendererOptions opts) : base(writer)
+        public TransformRenderer(TextWriter writer, string originalMarkdown, string fileName, RendererOptions opts, string pathToSource) : base(writer)
         {
             OriginalMarkdown = originalMarkdown;
             Options = opts;
             FileName = fileName;
+            this.PathToSource = pathToSource;
 
             ObjectRenderers.Add(new QuoteBlockRenderer());
             ObjectRenderers.Add(new HtmlBlockRenderer());
@@ -24,6 +25,7 @@ namespace MarkdownLocalize.Markdown
             ObjectRenderers.Add(new ContainerInlineRenderer());
         }
 
+        public string PathToSource { get; }
         private readonly string OriginalMarkdown;
         private readonly RendererOptions Options;
         private int LastWrittenIndex = 0;
