@@ -112,16 +112,4 @@ public class CLITest
         HelperCompareOutput(File.ReadAllText(pot), writer.GetStringBuilder().ToString());
     }
 
-    [Fact]
-    public void PathRewrite()
-    {
-        var writer = new StringWriter();
-        Console.SetOut(writer);
-
-        int exitCode = MarkdownLocalize.CLI.Program.Main(new[] { "--input", "resources/front-matter.md", "--action", "translate", "--output", "some-file.md", "--po-file", "resources/front-matter-with-comments.pot", "--gfm-front-matter", "--gfm-front-matter-exclude", "theme", "--markdown-translator-comment", "an extra comment" });
-        Assert.Equal(0, exitCode);
-
-        HelperCompareOutput("aaa", writer.GetStringBuilder().ToString());
-    }
-
 }

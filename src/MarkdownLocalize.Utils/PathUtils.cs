@@ -25,5 +25,17 @@ namespace MarkdownLocalize.Utils
             return String.Join('/', items.Reverse());
         }
 
+        public static string GetRelativePath(string relativeTo, string path)
+        {
+            if (relativeTo == null || relativeTo == "")
+                return null;
+            string relativeToDirectory = Path.GetDirectoryName(relativeTo);
+            if (relativeToDirectory == "")
+                relativeToDirectory = "./";
+            string pathDirectory = Path.GetDirectoryName(path);
+            if (pathDirectory == "")
+                pathDirectory = "./";
+            return Path.GetRelativePath(relativeToDirectory, pathDirectory).Replace("\\", "/"); ;
+        }
     }
 }
