@@ -122,6 +122,7 @@ namespace MarkdownLocalize.CLI
 
         private void DoFile(string input, string output)
         {
+            UpdateRelativePaths(input, output);
             switch (Action)
             {
                 case ACTION_GENERATE_POT:
@@ -211,13 +212,19 @@ namespace MarkdownLocalize.CLI
             }
         }
 
-        private void InitMarkdownParserOptions()
+        private void UpdateRelativePaths(string input, string output)
         {
             string relativePathOutput = null;
-            if (Input != null && Output != null && Input != "" && Output != "")
+            if (input != null && output != null && input != "" && output != "")
             {
-                relativePathOutput = Path.GetRelativePath(Input, Output);
+                relativePathOutput = Path.GetRelativePath(Path.GetDirectoryName(output), Path.GetDirectoryName(input));
             }
+            MarkdownParser.Options.ImageRelativePath = UpdateImageRelativePaths ? relativePathOutput : null;
+            MarkdownParser.Options.LinkRelativePath = UpdateLinksRelativePaths ? relativePathOutput : null;
+
+        }
+        private void InitMarkdownParserOptions()
+        {
 
             MarkdownParser.SetParserOptions(new RendererOptions()
             {
@@ -230,8 +237,6 @@ namespace MarkdownLocalize.CLI
                 IgnorePatterns = IgnorePatterns,
                 OnlyPatterns = OnlyPatterns,
                 ParseHtml = ParseHtml,
-                ImageRelativePath = UpdateImageRelativePaths ? relativePathOutput : null,
-                LinkRelativePath = UpdateLinksRelativePaths ? relativePathOutput : null,
             });
         }
 

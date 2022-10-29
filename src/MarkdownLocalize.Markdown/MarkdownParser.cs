@@ -9,21 +9,21 @@ public class MarkdownParser
 {
     public static MarkdownPipeline? _markdownPipeline { get; private set; }
 
-    static RendererOptions options = new RendererOptions();
+    public static RendererOptions Options = new RendererOptions();
     private static string REGEX_IMAGE = @"(!\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
     private static string REGEX_LINK = @"([^!]?\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
 
     public static void SetParserOptions(RendererOptions newOptions)
     {
         _markdownPipeline = null;
-        options = newOptions;
+        Options = newOptions;
     }
 
     public static IEnumerable<StringInfo> ExtractStrings(string markdown, string fileName)
     {
         using (var writer = new StringWriter())
         {
-            var renderer = new ExtractStringsRenderer(writer, markdown, fileName, options);
+            var renderer = new ExtractStringsRenderer(writer, markdown, fileName, Options);
             var document = Markdig.Markdown.Parse(markdown, GetPipeline());
             renderer.Render(document);
             return renderer.ExtractedStrings;
@@ -35,7 +35,7 @@ public class MarkdownParser
     {
         using (var writer = new StringWriter())
         {
-            var renderer = new EchoRenderer(writer, markdown, options);
+            var renderer = new EchoRenderer(writer, markdown, Options);
             var document = Markdig.Markdown.Parse(markdown, GetPipeline());
             renderer.Render(document);
             return writer.ToString();
@@ -47,15 +47,15 @@ public class MarkdownParser
     {
         using (var writer = new StringWriter())
         {
-            var renderer = new TranslateRenderer(writer, markdown, func, fileName, options);
+            var renderer = new TranslateRenderer(writer, markdown, func, fileName, Options);
             var document = Markdig.Markdown.Parse(markdown, GetPipeline());
             renderer.Render(document);
             tInfo = renderer.Info;
             string renderedMarkdown = writer.ToString();
-            if (options.ImageRelativePath != null)
-                renderedMarkdown = UpdateRelativePaths(REGEX_IMAGE, renderedMarkdown, options.ImageRelativePath);
-            if (options.LinkRelativePath != null)
-                renderedMarkdown = UpdateRelativePaths(REGEX_LINK, renderedMarkdown, options.LinkRelativePath);
+            if (Options.ImageRelativePath != null)
+                renderedMarkdown = UpdateRelativePaths(REGEX_IMAGE, renderedMarkdown, Options.ImageRelativePath);
+            if (Options.LinkRelativePath != null)
+                renderedMarkdown = UpdateRelativePaths(REGEX_LINK, renderedMarkdown, Options.LinkRelativePath);
 
             return renderedMarkdown;
         }
@@ -106,13 +106,13 @@ public class MarkdownParser
             MarkdownPipelineBuilder builder = new MarkdownPipelineBuilder()
                 .UsePreciseSourceLocation();
 
-            if (options != null && options.EnablePipeTables)
+            if (Options != null && Options.EnablePipeTables)
                 builder.UsePipeTables();
-            if (options != null && options.EnableFrontMatter)
+            if (Options != null && Options.EnableFrontMatter)
                 builder = builder.UseYamlFrontMatter();
-            if (options != null && options.EnableGitHubFlavoredMarkdownTaskLists)
+            if (Options != null && Options.EnableGitHubFlavoredMarkdownTaskLists)
                 builder = builder.UseTaskLists();
-            if (options != null && options.EnableCustomAttributes)
+            if (Options != null && Options.EnableCustomAttributes)
                 builder.UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
 
             builder = builder.EnableTrackTrivia();
