@@ -153,7 +153,7 @@ namespace MarkdownLocalize.CLI
             string relativeToSource = Path.GetRelativePath(Path.GetDirectoryName(outputMarkdown), inputMarkdown).Replace("\\", "/");
             string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, out info);
             Log(string.Format(TRANSLATION_INFO, info.TranslatedCount, info.TotalCount));
-            int ratio = (int)(info.TranslatedCount * 1.0 / info.TotalCount * 100);
+            int ratio = info.TotalCount > 0 ? (int)(info.TranslatedCount * 1.0 / info.TotalCount * 100) : 0;
             if (ratio >= MinRatio)
                 WriteToOutput(translatedMarkdown, outputMarkdown);
             else
