@@ -154,7 +154,7 @@ namespace MarkdownLocalize.CLI
             string po = File.ReadAllText(inputPO);
             var catalog = POT.Load(po);
             TranslationInfo info;
-            string relativeToSource = PathUtils.GetRelativePath(outputMarkdown, inputMarkdown);
+            string relativeToSource = PathUtils.GetRelativePath(outputMarkdown, inputMarkdown, true);
             string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, out info);
             Log(string.Format(TRANSLATION_INFO, info.TranslatedCount, info.TotalCount));
             int ratio = info.TotalCount > 0 ? (int)(info.TranslatedCount * 1.0 / info.TotalCount * 100) : 0;
@@ -229,7 +229,7 @@ namespace MarkdownLocalize.CLI
             string relativePathOutput = null;
             if (input != null && output != null && input != "" && output != "")
             {
-                relativePathOutput = PathUtils.GetRelativePath(output, input);
+                relativePathOutput = PathUtils.GetRelativePath(output, input, false);
             }
             MarkdownParser.Options.ImageRelativePath = UpdateImageRelativePaths ? relativePathOutput : null;
             MarkdownParser.Options.LinkRelativePath = UpdateLinksRelativePaths ? relativePathOutput : null;
