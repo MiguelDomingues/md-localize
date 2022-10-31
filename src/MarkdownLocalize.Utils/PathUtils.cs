@@ -36,7 +36,8 @@ namespace MarkdownLocalize.Utils
             if (pathDirectory == "")
                 pathDirectory = "./";
             string newPath = Path.GetRelativePath(relativeToDirectory, pathDirectory);
-            newPath = Path.Combine(newPath, Path.GetFileName(path)).Replace("\\", "/");
+            if (appendFilename)
+                newPath = Path.Combine(newPath, Path.GetFileName(path)).Replace("\\", "/");
             return newPath;
         }
     }
