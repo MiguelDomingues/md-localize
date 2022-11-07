@@ -1,6 +1,7 @@
 ﻿using Google.Api.Gax.ResourceNames;
 using Google.Apis.Services;
 using Google.Cloud.Translate.V3;
+using System.Web;
 
 namespace Google;
 public class GoogleTranslate
@@ -23,7 +24,7 @@ public class GoogleTranslate
         // response.Translations will have one entry, because request.Contents has one entry.
         Translation translation = response.Translations[0];
 
-        return translation.TranslatedText;
+        return HttpUtility.HtmlDecode(translation.TranslatedText);
     }
 
     private static void CheckCredentials()
