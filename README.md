@@ -189,3 +189,9 @@ Only relevant when the action is set to `translate`.
 ### --update-front-matter-locale
 
 If a 'locale' key exists in front-matter, update it to the locale being translated.
+
+### --add-front-matter-key KEY:VALUE
+
+Add the specified `KEY` with value `VALUE` to the front-matter of translated markdown files.
+Usage of this option may override other options such as `--add-front-matter-source` and `--update-front-matter-locale`.
+If the original markdown does not have any front-matter, then this option won't have any effect.

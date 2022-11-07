@@ -27,6 +27,14 @@ namespace MarkdownLocalize.Markdown
                     dict["locale"] = renderer.Locale;
                 }
 
+                if (renderer.Options.AddFrontMatterKeys != null)
+                {
+                    foreach (KeyValuePair<string, string> kv in renderer.Options.AddFrontMatterKeys)
+                    {
+                        dict[kv.Key] = kv.Value;
+                    }
+                }
+
                 string yamlText = new SerializerBuilder()
                     .WithIndentedSequences()
                     .Build()

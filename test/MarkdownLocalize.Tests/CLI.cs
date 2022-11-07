@@ -8,8 +8,8 @@ public class CLITest
 
     private void HelperCompareOutput(string expected, string actual)
     {
-        var lines = actual.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
-        var expectedLines = expected.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
+        var lines = actual.ReplaceLineEndings("\n").Split("\n", StringSplitOptions.TrimEntries);
+        var expectedLines = expected.ReplaceLineEndings("\n").Split("\n", StringSplitOptions.TrimEntries);
 
         Assert.Equal(expectedLines.Count(), lines.Count());
 
@@ -110,6 +110,30 @@ public class CLITest
         Assert.Equal(0, exitCode);
 
         HelperCompareOutput(File.ReadAllText(pot), writer.GetStringBuilder().ToString());
+    }
+
+    [Fact]
+    public void CLIFrontMatterAdd()
+    {
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+
+        int exitCode = MarkdownLocalize.CLI.Program.Main(new[] { "--input", "resources/front-matter.md", "--action", "translate", "-po", "resources/tasks.pt-PT.po", "--gfm-task-lists", "--gfm-front-matter", "--gfm-front-matter-exclude", "theme", "--gfm-front-matter-exclude", "description", "--gfm-front-matter-exclude", "tags", "--add-front-matter-key", "test:value" });
+        Assert.Equal(0, exitCode);
+
+        string expectedMD = @"---
+theme: my-custom-theme
+description: This text should be translated
+tags:
+  - First
+  - Second
+test: value
+---
+
+#
+";
+
+        HelperCompareOutput(expectedMD, writer.GetStringBuilder().ToString());
     }
 
 }

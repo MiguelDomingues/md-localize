@@ -93,6 +93,8 @@ namespace MarkdownLocalize.CLI
         [Option("--update-front-matter-locale", "Update locale in front matter.", CommandOptionType.NoValue)]
         public bool UpdateFrontMatterLocale { get; } = false;
 
+        [Option("--add-front-matter-key", "Add key:value to front-matter.", CommandOptionType.MultipleValue)]
+        public List<string> AddFrontMatter { get; } = null;
 
         private int OnExecute()
         {
@@ -251,7 +253,21 @@ namespace MarkdownLocalize.CLI
                 ParseHtml = ParseHtml,
                 FrontMatterSourceKey = FrontMatterSourceKey,
                 UpdateFrontMatterLocale = UpdateFrontMatterLocale,
+                AddFrontMatterKeys = ParseFrontMatterKeys(),
             });
+        }
+
+        private Dictionary<string, string> ParseFrontMatterKeys()
+        {
+            Dictionary<string, string> keys = new Dictionary<string, string>();
+            foreach (string s in AddFrontMatter)
+            {
+                string[] split = s.Split(':');
+                if (split.Length != 2)
+                    throw new Exception("Invalid option: " + s);
+                keys.Add(split[0], split[1]);
+            }
+            return keys;
         }
 
         private void WriteToOutput(string pot, string outputFile)
