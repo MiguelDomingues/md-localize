@@ -260,12 +260,15 @@ namespace MarkdownLocalize.CLI
         private Dictionary<string, string> ParseFrontMatterKeys()
         {
             Dictionary<string, string> keys = new Dictionary<string, string>();
-            foreach (string s in AddFrontMatter)
+            if (AddFrontMatter != null)
             {
-                string[] split = s.Split(':');
-                if (split.Length != 2)
-                    throw new Exception("Invalid option: " + s);
-                keys.Add(split[0], split[1]);
+                foreach (string s in AddFrontMatter)
+                {
+                    string[] split = s.Split(':');
+                    if (split.Length != 2)
+                        throw new Exception("Invalid option: " + s);
+                    keys.Add(split[0], split[1]);
+                }
             }
             return keys;
         }
