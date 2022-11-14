@@ -126,14 +126,14 @@ public class MarkdownExtractStrings
     [Fact]
     public void ImageAndText()
     {
-        IEnumerable<string> strings = MarkdownParser.ExtractStrings("![Landscape](./images/some-image.png) Beautiful", null).Select(si => si.String);
-        Assert.Equal(new[] { "Beautiful", "Landscape" }, strings);
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings("![Landscape](./images/some-image.png) Beautiful", null).Select(si => si.String).Distinct();
+        Assert.Equal(new[] { "Landscape", "Beautiful" }, strings);
     }
 
     [Fact]
     public void TextImageText()
     {
-        IEnumerable<string> strings = MarkdownParser.ExtractStrings("The following image ![Landscape](./images/some-image.png) is beautiful", null).Select(si => si.String);
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings("The following image ![Landscape](./images/some-image.png) is beautiful", null).Select(si => si.String).Distinct();
         Assert.Equal(new[] { "The following image ![Landscape](./images/some-image.png) is beautiful", "Landscape" }, strings);
     }
 
@@ -151,7 +151,7 @@ public class MarkdownExtractStrings
         {
             EnableCustomAttributes = true,
         });
-        IEnumerable<string> strings = MarkdownParser.ExtractStrings("[Google](https://www.google.com) {.css-class}", null).Select(si => si.String);
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings("[Google](https://www.google.com) {.css-class}", null).Select(si => si.String).Distinct();
         Assert.Equal(new[] { "Google" }, strings);
     }
 

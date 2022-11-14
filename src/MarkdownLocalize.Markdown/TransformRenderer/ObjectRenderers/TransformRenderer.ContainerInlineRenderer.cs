@@ -48,15 +48,19 @@ namespace MarkdownLocalize.Markdown
                 IEnumerable<Inline> childs = obj;
                 while (childs.Count() > 0 && SkipChild(childs.First()))
                 {
+                    ProcessChild(renderer, childs.First());
                     childs = childs.Skip(1);
                 }
                 if (childs.Count() > 0)
                 {
                     var firstChildTransform = childs.First();
 
+                    IEnumerable<Inline> childsEnd = new List<Inline>();
+
                     // Let's skip childs from end
                     while (childs.Count() > 0 && SkipChild(childs.Last()))
                     {
+                        childsEnd = childsEnd.Append(childs.Last());
                         childs = childs.SkipLast(1);
                     }
                     var lastChildTransform = childs.Last();
@@ -90,6 +94,11 @@ namespace MarkdownLocalize.Markdown
                             renderer.WriteRaw(objMarkdown, childs.First().Span.Start);
                         }
                     }
+
+                    foreach (Inline i in childsEnd)
+                    {
+                        ProcessChild(renderer, i);
+                    }
                 }
                 // Extract labels from urls
                 IEnumerable<LinkInline> links = obj.Where(c => c is LinkInline).Cast<LinkInline>().Where(l => l.FirstChild != null);
@@ -113,6 +122,21 @@ namespace MarkdownLocalize.Markdown
 
                 if (!obj.LastChild.Span.IsEmpty)
                     renderer.MoveTo(obj.LastChild.Span.End + 1);
+            }
+
+            private void ProcessChild(TransformRenderer renderer, Inline child)
+            {
+                if (child is LinkInline l)
+                {
+                    if (l.IsImage && !renderer.Options.SkipImageAlt)
+                        renderer.PushElementType(ElementType.IMAGE_ALT);
+                    else if (!l.IsImage)
+                        renderer.PushElementType(ElementType.LINK_LABEL);
+                    Write(renderer, child);
+                    renderer.MoveTo(l.Span.End + 1);
+                    renderer.PopElementType();
+
+                }
             }
 
             private static bool SkipChild(Inline elem)

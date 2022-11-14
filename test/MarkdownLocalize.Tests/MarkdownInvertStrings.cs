@@ -28,7 +28,7 @@ public class MarkdownInvertString
     [Theory]
     [InlineData("![abc](./images/some-image.png)", "![cba](../../../original-doc-path/images/some-image.png)")]
     [InlineData("![abc](images/some-image.png)", "![cba](../../../original-doc-path/images/some-image.png)")]
-    [InlineData("The image ![abc](./images/some-image.png)", "egami ehT ![abc](../../../original-doc-path/images/some-image.png)")]
+    [InlineData("The image ![abc](./images/some-image.png)", "egami ehT ![cba](../../../original-doc-path/images/some-image.png)")]
     public void UpdateImageRelativePath(string source, string expected)
     {
         MarkdownParser.SetParserOptions(new RendererOptions()
@@ -86,6 +86,41 @@ public class MarkdownInvertString
     > driht
     > dnoces
     > tsrif
+";
+        string md = MarkdownParser.Translate(original, InvertString, null, null, null, out _);
+        Assert.Equal(expected, md);
+    }
+
+
+    [Fact]
+    public void LinkWithAttr()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = true,
+            SkipImageAlt = false,
+        });
+
+        string original = @"[label](https://www.google.com) {.footnote}
+";
+        string expected = @"[lebal](https://www.google.com) {.footnote}
+";
+        string md = MarkdownParser.Translate(original, InvertString, null, null, null, out _);
+        Assert.Equal(expected, md);
+    }
+
+    [Fact]
+    public void LinkWithTextAttr()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = true,
+            SkipImageAlt = false,
+        });
+
+        string original = @"The link [label](https://www.google.com) {.footnote}
+";
+        string expected = @"knil ehT [lebal](https://www.google.com) {.footnote}
 ";
         string md = MarkdownParser.Translate(original, InvertString, null, null, null, out _);
         Assert.Equal(expected, md);
