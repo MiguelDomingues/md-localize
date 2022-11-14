@@ -129,12 +129,19 @@ namespace MarkdownLocalize.Markdown
                 if (child is LinkInline l)
                 {
                     if (l.IsImage && !renderer.Options.SkipImageAlt)
+                    {
+
                         renderer.PushElementType(ElementType.IMAGE_ALT);
+                        Write(renderer, child);
+                        renderer.PopElementType();
+                    }
                     else if (!l.IsImage)
+                    {
                         renderer.PushElementType(ElementType.LINK_LABEL);
-                    Write(renderer, child);
+                        Write(renderer, child);
+                        renderer.PopElementType();
+                    }
                     renderer.MoveTo(l.Span.End + 1);
-                    renderer.PopElementType();
 
                 }
             }
