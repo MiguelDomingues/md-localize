@@ -5,6 +5,7 @@ using static MarkdownLocalize.Markdown.TranslateRenderer;
 
 namespace MarkdownLocalize.Tests;
 
+[Collection("MDLocalize Tests")]
 public class TranslateMarkdown
 {
 

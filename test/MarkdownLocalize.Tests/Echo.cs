@@ -1,6 +1,7 @@
 using MarkdownLocalize.Markdown;
 namespace MarkdownLocalize.Tests;
 
+[Collection("MDLocalize Tests")]
 public class EchoTests
 {
 

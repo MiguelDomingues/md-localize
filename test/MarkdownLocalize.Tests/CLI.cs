@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace MarkdownLocalize.Tests;
 
+[Collection("MDLocalize Tests")]
 public class CLITest
 {
 
