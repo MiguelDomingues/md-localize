@@ -148,7 +148,8 @@ namespace MarkdownLocalize.Markdown
                     trimChildEnd.Add(childMarkdown.Substring(trimEndIndex));
 
                     trimmedS += childMarkdown.Trim() + "\n";
-                    lastIndex += childMarkdown.Length;
+                    //lastIndex += childMarkdown.Length;
+                    lastIndex = i.Span.End + 1;
                 }
                 else
                 {

@@ -66,4 +66,30 @@ public class MarkdownInvertString
         string md = MarkdownParser.Translate(source, InvertString, null, null, null, out _);
         Assert.Equal(expected, md);
     }
+
+    [Fact]
+    public void Quote()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableGitHubFlavoredMarkdownTaskLists = true
+        });
+
+        string original = @"- [ ] Task
+
+    > first
+    > second
+    > third
+";
+        string expected = @"- [ ] ksaT
+
+    > driht
+    > dnoces
+    > tsrif
+";
+        string md = MarkdownParser.Translate(original, InvertString, null, null, null, out _);
+        Assert.Equal(expected, md);
+    }
 }
+
+
