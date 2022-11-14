@@ -148,12 +148,16 @@ public class POT
         return catalog;
     }
 
-    public static string Translate(POCatalog catalog, string markdown, string fileName, string pathToSource, out TranslationInfo info)
+    public static string Translate(POCatalog catalog, string markdown, string fileName, string pathToSource, bool keepSourceStrings, out TranslationInfo info)
     {
         string translatedMarkdown = MarkdownParser.Translate(markdown, (si) =>
         {
             var key = new POKey(NormalizeLineBreaks(si.String), null, si.Context);
             string translation = catalog.GetTranslation(key);
+            if (keepSourceStrings && translation == null)
+            {
+                translation = si.String;
+            }
             return translation != null ? translation.Trim() : null;
         }, fileName, pathToSource, catalog.Language, out info);
 

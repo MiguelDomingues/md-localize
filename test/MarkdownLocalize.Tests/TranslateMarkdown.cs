@@ -26,7 +26,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO(poFile));
         TranslationInfo info;
-        string md = POT.Translate(catalog, originalMarkdown, null, null, out info);
+        string md = POT.Translate(catalog, originalMarkdown, null, null, false, out info);
 
         Assert.Equal(translatedMarkdown, md);
         Assert.Equal(expectedTotalCount, info.TotalCount);
@@ -44,10 +44,22 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO(poFile));
         TranslationInfo info;
-        string md = POT.Translate(catalog, originalMarkdown, null, null, out info);
+        string md = POT.Translate(catalog, originalMarkdown, null, null, false, out info);
 
         Assert.Equal(translatedMarkdown, md);
         Assert.Equal(expectedTotalCount, info.TotalCount);
         Assert.Equal(expectedTranslatedCount, info.TranslatedCount);
+    }
+
+    [Fact]
+    public void TranslateKeepSource()
+    {
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, "# Heading\n\n##New Heading", null, null, true, out info);
+
+        Assert.Equal("# Título\n\n##New Heading", md);
+        Assert.Equal(2, info.TotalCount);
+        Assert.Equal(2, info.TranslatedCount);
     }
 }

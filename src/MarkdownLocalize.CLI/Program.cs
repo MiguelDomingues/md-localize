@@ -96,6 +96,9 @@ namespace MarkdownLocalize.CLI
         [Option("--add-front-matter-key", "Add key:value to front-matter.", CommandOptionType.MultipleValue)]
         public List<string> AddFrontMatter { get; } = null;
 
+        [Option("--keep-source-strings", "Keep source strings for non-translated strings.", CommandOptionType.NoValue)]
+        public bool KeepSourceStrings { get; } = false;
+
         private int OnExecute()
         {
             InitMarkdownParserOptions();
@@ -157,7 +160,7 @@ namespace MarkdownLocalize.CLI
             var catalog = POT.Load(po);
             TranslationInfo info;
             string relativeToSource = PathUtils.GetRelativePath(outputMarkdown, inputMarkdown, true);
-            string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, out info);
+            string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, KeepSourceStrings, out info);
             Log(string.Format(TRANSLATION_INFO, info.TranslatedCount, info.TotalCount));
             int ratio = info.TotalCount > 0 ? (int)(info.TranslatedCount * 1.0 / info.TotalCount * 100) : 0;
             if (info.TotalCount > 0)
