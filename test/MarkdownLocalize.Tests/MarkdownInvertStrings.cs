@@ -126,6 +126,45 @@ public class MarkdownInvertString
         string md = MarkdownParser.Translate(original, InvertString, null, null, null, out _);
         Assert.Equal(expected, md);
     }
+
+    [Fact]
+    public void ListWithIndentedText()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = true,
+            SkipImageAlt = false,
+        });
+
+        string original = @"1. Item 1
+
+    ![alt](./image.png)
+
+    ![text](./image2.png)
+
+    First
+    Second
+    Third
+
+1. Item 2
+";
+        string expected = @"1. 1 metI
+
+    ![tla](./image.png)
+
+    ![txet](./image2.png)
+
+    drihT
+    dnoceS
+    tsriF
+
+1. 2 metI
+";
+        string md = MarkdownParser.Translate(original, InvertString, null, null, null, out _);
+        Assert.Equal(expected, md);
+    }
+
+
 }
 
 

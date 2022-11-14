@@ -84,6 +84,10 @@ namespace MarkdownLocalize.Markdown
                         {
                             renderer.WriteMultiple(childs, renderer.LastWrittenIndex);
                         }
+                        else if (childs.Count() > 1 && childs.All(c => c is LiteralInline || c is LineBreakInline))
+                        {
+                            renderer.WriteMultiple(childs, renderer.LastWrittenIndex);
+                        }
                         else
                         {
                             renderer.MoveTo(childs.First().Span.Start);
