@@ -124,6 +124,17 @@ public class MarkdownExtractStrings
     }
 
     [Fact]
+    public void ImageAltSkipWithText()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            SkipImageAlt = true,
+        });
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings("![Landscape](./images/some-image.png) with text", null).Select(si => si.String);
+        Assert.Equal(new string[] { "with text" }, strings);
+    }
+
+    [Fact]
     public void ImageAndText()
     {
         IEnumerable<string> strings = MarkdownParser.ExtractStrings("![Landscape](./images/some-image.png) Beautiful", null).Select(si => si.String).Distinct();
@@ -133,6 +144,7 @@ public class MarkdownExtractStrings
     [Fact]
     public void TextImageText()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         IEnumerable<string> strings = MarkdownParser.ExtractStrings("The following image ![Landscape](./images/some-image.png) is beautiful", null).Select(si => si.String).Distinct();
         Assert.Equal(new[] { "The following image ![Landscape](./images/some-image.png) is beautiful", "Landscape" }, strings);
     }

@@ -1,4 +1,5 @@
 using MarkdownLocalize.CLI;
+using MarkdownLocalize.Markdown;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace MarkdownLocalize.Tests;
@@ -85,6 +86,7 @@ public class CLITest
     [Fact]
     public void CLIAppendPOTImage()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         string tempPot = Path.GetTempFileName();
 
         int exitCode = MarkdownLocalize.CLI.Program.Main(new[] { "--input", "resources/image-with-text.md", "--action", "generate-pot", "--po-file", tempPot, "--custom-attributes" });
@@ -103,6 +105,7 @@ public class CLITest
     [InlineData("resources/front-matter.md", "resources/front-matter-with-comments.pot")]
     public void CLIGeneratePOTExtraComments(string md, string pot)
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         var writer = new StringWriter();
         Console.SetOut(writer);
 
@@ -115,6 +118,7 @@ public class CLITest
     [Fact]
     public void CLIFrontMatterAdd()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         var writer = new StringWriter();
         Console.SetOut(writer);
 
