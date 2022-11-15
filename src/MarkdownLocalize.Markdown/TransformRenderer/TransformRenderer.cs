@@ -51,6 +51,9 @@ namespace MarkdownLocalize.Markdown
 
         private bool ShouldTransform(string s)
         {
+            if (s == "&nbsp;")
+                return false;
+
             if (Options.OnlyPatterns.Length > 0)
             {
                 if (!Options.OnlyPatterns.Any(p => Regex.Match(s, p, RegexOptions.IgnoreCase | RegexOptions.Singleline).Success))
