@@ -417,4 +417,27 @@ More text";
         Assert.Equal(new string[] { "Item 1", "alt", "text", "First\nSecond\nThird", "Item 2" }, strings);
     }
 
+    [Fact]
+    public void SingleString()
+    {
+        string md = @"- Item
+
+    > One
+";
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Item", "One" }, strings);
+    }
+
+    [Fact]
+    public void TwoStrings()
+    {
+        string md = @"- Item
+
+    > One
+    > Two
+";
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Item", "One\nTwo" }, strings);
+    }
+
 }

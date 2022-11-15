@@ -11,7 +11,7 @@ namespace MarkdownLocalize.Markdown
             protected override void Write(TransformRenderer renderer, QuoteBlock obj)
             {
                 bool beforeProcessRawLinesIndependent = renderer.ProcessRawLinesIndependent;
-                renderer.ProcessRawLinesIndependent = true;
+                renderer.ProcessRawLinesIndependent = false;
                 renderer.WriteChildren(obj);
                 renderer.ProcessRawLinesIndependent = beforeProcessRawLinesIndependent;
             }
