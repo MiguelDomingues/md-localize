@@ -179,10 +179,13 @@ namespace MarkdownLocalize.Markdown
                     Write(eEnd.Current);
                 }
 
-                if (eStart.MoveNext() || eEnd.MoveNext())
-                    throw new Exception("Translation of '" + trimmedS.Trim() + "' failed. Missing lines. Check for line breaks.");
                 if (eTransform.MoveNext())
-                    throw new Exception("Translation of '" + trimmedS.Trim() + "' failed. Extra lines found. Check for line breaks.");
+                {
+                    do
+                    {
+                        Write(eTransform.Current);
+                    } while (eTransform.MoveNext());
+                }
             }
             SkipTo(childs.Last().Span.End + 1);
         }
