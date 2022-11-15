@@ -168,6 +168,10 @@ namespace MarkdownLocalize.Markdown
             }
 
             string transformedS = CheckTransform(trimmedS.Trim(), index, true);
+
+            if (transformedS == null)
+                throw new Exception("Missing translation for: " + trimmedS);
+
             // Reconstruct the text with trimmed whitespace
             IEnumerable<string> transformedLines = transformedS.ReplaceLineEndings("\n").Split("\n");
 
