@@ -178,6 +178,11 @@ namespace MarkdownLocalize.Markdown
                     Write(eTransform.Current);
                     Write(eEnd.Current);
                 }
+
+                if (eStart.MoveNext() || eEnd.MoveNext())
+                    throw new Exception("Translation of '" + trimmedS.Trim() + "' failed. Missing lines. Check for line breaks.");
+                if (eTransform.MoveNext())
+                    throw new Exception("Translation of '" + trimmedS.Trim() + "' failed. Extra lines found. Check for line breaks.");
             }
             SkipTo(childs.Last().Span.End + 1);
         }
