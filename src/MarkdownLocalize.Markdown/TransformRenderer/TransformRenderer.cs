@@ -135,6 +135,10 @@ namespace MarkdownLocalize.Markdown
             int lastIndex = index;
             foreach (Inline i in childs)
             {
+                if (i is LineBreakInline)
+                {
+                    continue;
+                }
                 int childStartIndex = i.Span.Start;
                 string markdownBefore = OriginalMarkdown.Substring(lastIndex, childStartIndex - lastIndex);
                 string childMarkdown = OriginalMarkdown.Substring(childStartIndex, i.Span.Length);

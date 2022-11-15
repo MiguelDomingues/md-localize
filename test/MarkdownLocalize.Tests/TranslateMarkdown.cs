@@ -63,4 +63,77 @@ public class TranslateMarkdown
         Assert.Equal(2, info.TotalCount);
         Assert.Equal(2, info.TranslatedCount);
     }
+
+    [Fact]
+    public void Quote()
+    {
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"- Heading
+
+    > Hello
+    World
+", null, null, true, out info);
+
+        Assert.Equal(@"- Título
+
+    > Olá
+    Mundo
+", md);
+        Assert.Equal(2, info.TotalCount);
+        Assert.Equal(2, info.TranslatedCount);
+    }
+
+    [Fact]
+    public void QuoteTwo()
+    {
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"- Heading
+
+    > Hello
+    > World
+", null, null, true, out info);
+
+        Assert.Equal(@"- Título
+
+    > Olá
+    > Mundo
+", md);
+        Assert.Equal(2, info.TotalCount);
+        Assert.Equal(2, info.TranslatedCount);
+    }
+
+    [Fact]
+    public void ListWithIndentedText()
+    {
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"1. Heading
+
+    ![Hello](./image.png)
+
+    ![Hello](./image2.png)
+
+    Hello
+    World
+
+1. Heading
+", null, null, true, out info);
+
+        Assert.Equal(@"1. Título
+
+    ![Olá](./image.png)
+
+    ![Olá](./image2.png)
+
+    Olá
+    Mundo
+
+1. Título
+", md);
+        Assert.Equal(7, info.TotalCount);
+        Assert.Equal(7, info.TranslatedCount);
+    }
+
 }

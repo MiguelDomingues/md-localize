@@ -325,7 +325,7 @@ This is a simple assign.", null).Select(si => si.String);
     > with
     two lines
 ", null).Select(si => si.String);
-        Assert.Equal(new[] { "An item", "with\n\ntwo lines" }, strings);
+        Assert.Equal(new[] { "An item", "with\ntwo lines" }, strings);
     }
 
     [Fact]
@@ -336,7 +336,7 @@ This is a simple assign.", null).Select(si => si.String);
     > with
     > two lines
 ", null).Select(si => si.String);
-        Assert.Equal(new[] { "An item", "with\n\ntwo lines" }, strings);
+        Assert.Equal(new[] { "An item", "with\ntwo lines" }, strings);
     }
 
     [Fact]
@@ -398,5 +398,23 @@ More text";
         Assert.Equal(new string[] { }, strings);
     }
 
+    [Fact]
+    public void ListWithIndentedText()
+    {
+        string md = @"1. Item 1
+
+    ![alt](./image.png)
+
+    ![text](./image2.png)
+
+    First
+    Second
+    Third
+
+1. Item 2
+";
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Item 1", "alt", "text", "First\nSecond\nThird", "Item 2" }, strings);
+    }
 
 }

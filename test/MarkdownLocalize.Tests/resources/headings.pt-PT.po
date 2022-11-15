@@ -24,3 +24,11 @@ msgstr "Título"
 msgctxt "Heading (level 2)"
 msgid "Another Heading"
 msgstr "Outro Título"
+
+msgctxt "Text"
+msgid "Hello\nWorld"
+msgstr "Olá\nMundo"
+
+msgctxt "Image alternative text"
+msgid "Hello"
+msgstr "Olá"
