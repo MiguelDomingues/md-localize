@@ -154,7 +154,7 @@ public class POT
         {
             var key = new POKey(NormalizeLineBreaks(si.String), null, si.Context);
             string translation = catalog.GetTranslation(key);
-            if (keepSourceStrings && translation == null)
+            if (keepSourceStrings && (translation == null || translation == ""))
             {
                 translation = si.String;
             }
