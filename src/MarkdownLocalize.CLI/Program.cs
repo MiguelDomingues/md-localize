@@ -215,7 +215,7 @@ namespace MarkdownLocalize.CLI
 
         private void Log(string message)
         {
-            if ((this.Output == null || this.Output == "") && this.Action != ACTION_GENERATE_POT)
+            if (this.Output == null || this.Output == "")
                 Console.Error.Write(message);
             else
                 Console.WriteLine(message);
