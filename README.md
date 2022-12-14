@@ -105,6 +105,13 @@ If not specified, the output is written to console.
 The translated .po file.
 This is only used when the `translate` option is used.
 
+### --po-dir <DIRECTORY>, -pod <DIRECTORY>
+
+The directory to place the .pot files.
+Using this option will re-create the directory structure existing in the `--input` and one .pot file for each.
+This is only used when the `generate` option is used.
+When using this option, do **not** the `--po-file` option.
+
 ### --gfm-task-lists
 
 Enable task lists as defined in [Task list items (extension)](https://github.github.com/gfm/#task-list-items-extension-).

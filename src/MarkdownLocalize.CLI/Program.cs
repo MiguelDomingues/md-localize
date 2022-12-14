@@ -38,6 +38,9 @@ namespace MarkdownLocalize.CLI
         [Option("--po-file|-po", ".po/.pot file ", CommandOptionType.SingleValue)]
         public string POTFile { get; }
 
+        [Option("--po-dir|-pod", "The directory to create the .po/.pot files. Directory structure is kept.", CommandOptionType.SingleValue)]
+        public string POTDirectory { get; }
+
         [Option("--locale|-l", "Locale.", CommandOptionType.SingleValue)]
         public string Locale { get; }
 
@@ -106,20 +109,27 @@ namespace MarkdownLocalize.CLI
                 Google.GoogleTranslate.InitCredentials(GoogleTranslateCredentials, GoogleProjectId);
             if (File.GetAttributes(Input).HasFlag(FileAttributes.Directory))
             {
-                DoDirectory(Input, Output);
+                DoDirectory(Input, Output, this.POTDirectory);
             }
             else
-                DoFile(Input, Output);
+                DoFile(Input, Output, this.POTFile);
             return 0;
         }
 
-        private void DoDirectory(string input, string output)
+        private void DoDirectory(string input, string output, string poDirectory)
         {
             foreach (string f in Directory.GetFiles(input, "*.md"))
             {
                 string filename = Path.GetFileName(f);
                 string outputFile = Path.Combine(output, filename);
-                DoFile(f, outputFile);
+                if (this.POTFile == "" || this.POTFile == null)
+                {
+                    string extension = this.Action == ACTION_GENERATE_POT ? ".pot" : ".po";
+                    string poFile = Path.Combine(poDirectory, Path.ChangeExtension(filename, extension));
+                    DoFile(f, outputFile, poFile);
+                }
+                else
+                    DoFile(f, outputFile, this.POTFile);
             }
 
             foreach (string d in Directory.GetDirectories(input))
@@ -127,22 +137,23 @@ namespace MarkdownLocalize.CLI
                 Log($"Scanning {Path.GetRelativePath(Directory.GetCurrentDirectory(), d)}...");
                 string dirname = Path.GetFileName(d);
                 string outputD = Path.Combine(output, dirname);
-                DoDirectory(d, outputD);
+                string poD = poDirectory != null ? Path.Combine(poDirectory, dirname) : null;
+                DoDirectory(d, outputD, poD);
             }
         }
 
-        private void DoFile(string input, string output)
+        private void DoFile(string input, string output, string poFile)
         {
             UpdateRelativePaths(input, output);
             switch (Action)
             {
                 case ACTION_GENERATE_POT:
                     Log($"Generating .pot from {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)}...");
-                    GeneratePOT(input, this.POTFile);
+                    GeneratePOT(input, poFile);
                     break;
                 case ACTION_TRANSLATE:
                     Log($"Translating {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)}...");
-                    Translate(input, output, POTFile);
+                    Translate(input, output, poFile);
                     break;
                 case ACTION_GOOGLE_TRANSLATE:
                     Log($"Google translating {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)} to {Locale}");
@@ -204,7 +215,7 @@ namespace MarkdownLocalize.CLI
 
         private void Log(string message)
         {
-            if (this.Output == null || this.Output == "")
+            if ((this.Output == null || this.Output == "") && this.Action != ACTION_GENERATE_POT)
                 Console.Error.Write(message);
             else
                 Console.WriteLine(message);
