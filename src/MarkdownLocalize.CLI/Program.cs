@@ -216,7 +216,7 @@ namespace MarkdownLocalize.CLI
         private void Log(string message)
         {
             if (this.Output == null || this.Output == "")
-                Console.Error.Write(message);
+                Console.Error.WriteLine(message);
             else
                 Console.WriteLine(message);
         }
