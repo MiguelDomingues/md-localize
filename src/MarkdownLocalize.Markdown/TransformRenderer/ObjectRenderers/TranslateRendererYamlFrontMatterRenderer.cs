@@ -11,41 +11,48 @@ namespace MarkdownLocalize.Markdown
 
             protected override void Write(TransformRenderer renderer, YamlFrontMatterBlock obj)
             {
-                renderer.PushElementType(ElementType.YAML_FRONT_MATTER);
-                var reader = new StringReader(String.Join(Environment.NewLine, obj.Lines));
-
-                object yamlObject = new Deserializer().Deserialize(reader);
-
-                object newYaml = Convert(renderer, null, yamlObject);
-
-                Dictionary<object, object> dict = (Dictionary<object, object>)newYaml;
-                if (renderer.Options.FrontMatterSourceKey != null)
-                    dict[renderer.Options.FrontMatterSourceKey] = renderer.PathToSource;
-
-                if (dict.ContainsKey("locale") && renderer.Locale != "")
+                try
                 {
-                    dict["locale"] = renderer.Locale;
-                }
+                    renderer.PushElementType(ElementType.YAML_FRONT_MATTER);
+                    var reader = new StringReader(String.Join(Environment.NewLine, obj.Lines));
 
-                if (renderer.Options.AddFrontMatterKeys != null)
-                {
-                    foreach (KeyValuePair<string, string> kv in renderer.Options.AddFrontMatterKeys)
+                    object yamlObject = new Deserializer().Deserialize(reader);
+
+                    object newYaml = Convert(renderer, null, yamlObject);
+
+                    Dictionary<object, object> dict = (Dictionary<object, object>)newYaml;
+                    if (renderer.Options.FrontMatterSourceKey != null)
+                        dict[renderer.Options.FrontMatterSourceKey] = renderer.PathToSource;
+
+                    if (dict.ContainsKey("locale") && renderer.Locale != "")
                     {
-                        dict[kv.Key] = kv.Value;
+                        dict["locale"] = renderer.Locale;
                     }
+
+                    if (renderer.Options.AddFrontMatterKeys != null)
+                    {
+                        foreach (KeyValuePair<string, string> kv in renderer.Options.AddFrontMatterKeys)
+                        {
+                            dict[kv.Key] = kv.Value;
+                        }
+                    }
+
+                    string yamlText = new SerializerBuilder()
+                        .WithIndentedSequences()
+                        .Build()
+                        .Serialize(newYaml);
+
+                    renderer.WriteLine("---");
+                    renderer.Write(yamlText.ReplaceLineEndings("\n"));
+                    renderer.Write("---");
+                    renderer.SkipTo(obj.Span.End + 1);
+
+                    renderer.PopElementType();
                 }
-
-                string yamlText = new SerializerBuilder()
-                    .WithIndentedSequences()
-                    .Build()
-                    .Serialize(newYaml);
-
-                renderer.WriteLine("---");
-                renderer.Write(yamlText.ReplaceLineEndings("\n"));
-                renderer.Write("---");
-                renderer.SkipTo(obj.Span.End + 1);
-
-                renderer.PopElementType();
+                catch (Exception e)
+                {
+                    throw new Exception("The YAML Front-matter block is invalid: " + e.Message);
+                }
             }
 
             private object Convert(TransformRenderer renderer, object key, object original)
