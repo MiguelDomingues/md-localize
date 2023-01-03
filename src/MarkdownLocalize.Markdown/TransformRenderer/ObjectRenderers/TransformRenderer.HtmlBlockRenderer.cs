@@ -79,6 +79,8 @@ namespace MarkdownLocalize.Markdown
             {
                 switch (node)
                 {
+                    case IHtmlTableDataCellElement:
+                        return ElementType.HTML_CELL;
                     case IHtmlBreakRowElement:
                         return ElementType.HTML_RAW;
                     case IComment:

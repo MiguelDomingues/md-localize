@@ -440,4 +440,30 @@ More text";
         Assert.Equal(new string[] { "Item", "One\nTwo" }, strings);
     }
 
+
+    [Fact]
+    public void TableEmptyCell()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            ParseHtml = true,
+        });
+        string md = @"<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Job Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>John</td>
+<td></td>
+</tr>
+</tbody>
+</table>";
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Name", "Job Role", "John" }, strings);
+    }
+
 }

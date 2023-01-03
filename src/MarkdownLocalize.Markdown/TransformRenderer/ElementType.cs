@@ -49,6 +49,9 @@ namespace MarkdownLocalize.Markdown
         [Description("HTML div container.")]
         HTML_DIV,
 
+        [Description("HTML cell.")]
+        HTML_CELL,
+
         [Description("Thematic Break")]
         THEMATIC_BREAK,
     }
