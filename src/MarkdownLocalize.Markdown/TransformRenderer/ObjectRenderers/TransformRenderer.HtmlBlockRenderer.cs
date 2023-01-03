@@ -33,7 +33,7 @@ namespace MarkdownLocalize.Markdown
                     int extractedStrings = 0;
                     foreach (var node in doc.Body.Descendents())
                     {
-                        if (!node.HasChildNodes)
+                        if (!node.HasChildNodes && !String.IsNullOrEmpty(node.TextContent))
                         {
                             renderer.PushElementType(NodeToElementType(node));
                             string text = node.TextContent;
@@ -79,8 +79,6 @@ namespace MarkdownLocalize.Markdown
             {
                 switch (node)
                 {
-                    case IHtmlTableDataCellElement:
-                        return ElementType.HTML_CELL;
                     case IHtmlBreakRowElement:
                         return ElementType.HTML_RAW;
                     case IComment:
@@ -89,7 +87,6 @@ namespace MarkdownLocalize.Markdown
                         return ElementType.HTML_DIV;
                     case IText:
                         return ElementType.TEXT;
-
                 }
                 Console.Error.WriteLine("Unable to convert HTML element fo type " + node.GetType());
                 return null;
