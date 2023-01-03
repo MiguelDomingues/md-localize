@@ -146,6 +146,8 @@ public class MarkdownParser
                 return ElementType.CODE;
             case ThematicBreakBlock:
                 return ElementType.THEMATIC_BREAK;
+            case LinkReferenceDefinition:
+                return ElementType.LINK_DEFINITION;
         }
         Console.Error.WriteLine("Unable to convert element fo type " + lb.GetType());
         return null;

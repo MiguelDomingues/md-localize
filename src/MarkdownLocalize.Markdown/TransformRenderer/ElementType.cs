@@ -51,5 +51,8 @@ namespace MarkdownLocalize.Markdown
 
         [Description("Thematic Break")]
         THEMATIC_BREAK,
+
+        [Description("Link definition")]
+        LINK_DEFINITION,
     }
 }
