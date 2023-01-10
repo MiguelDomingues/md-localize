@@ -202,3 +202,8 @@ If a 'locale' key exists in front-matter, update it to the locale being translat
 Add the specified `KEY` with value `VALUE` to the front-matter of translated markdown files.
 Usage of this option may override other options such as `--add-front-matter-source` and `--update-front-matter-locale`.
 If the original markdown does not have any front-matter, then this option won't have any effect.
+
+### --file-suffix STRING
+
+Optional suffix to append to the output file names.
+This affects the files specified in `--output`, `--po-file` or `--po-dir`

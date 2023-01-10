@@ -102,6 +102,9 @@ namespace MarkdownLocalize.CLI
         [Option("--keep-source-strings", "Keep source strings for non-translated strings.", CommandOptionType.NoValue)]
         public bool KeepSourceStrings { get; } = false;
 
+        [Option("--file-suffix", "Suffix to add to output files.", CommandOptionType.SingleValue)]
+        public string FileSuffix { get; } = "";
+
         private int OnExecute()
         {
             InitMarkdownParserOptions();
@@ -144,6 +147,16 @@ namespace MarkdownLocalize.CLI
 
         private void DoFile(string input, string output, string poFile)
         {
+            if (!String.IsNullOrEmpty(FileSuffix))
+            {
+                string outputDir = Path.GetDirectoryName(output);
+                string outputExt = Path.GetExtension(output);
+                output = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(output) + FileSuffix + outputExt);
+
+                string poFileDir = Path.GetDirectoryName(poFile);
+                string poFileExt = Path.GetExtension(poFile);
+                poFile = Path.Combine(poFileDir, Path.GetFileNameWithoutExtension(poFile) + FileSuffix + poFileExt);
+            }
             UpdateRelativePaths(input, output);
             switch (Action)
             {
