@@ -242,14 +242,18 @@ namespace MarkdownLocalize.CLI
             string pot = File.Exists(outputPOT) ? File.ReadAllText(outputPOT) : "";
             if (pot == "")
             {
-                pot = POT.Generate(strings, TranslatorComments);
-                WriteToOutput(pot, outputPOT);
+                if (strings.Count() > 0)
+                {
+                    pot = POT.Generate(strings, TranslatorComments);
+                    WriteToOutput(pot, outputPOT);
+                }
             }
             else
             {
                 var catalog = POT.Load(pot);
                 string newPOT = POT.Append(catalog, strings, TranslatorComments);
-                WriteToOutput(newPOT, outputPOT);
+                if (catalog.Count > 0)
+                    WriteToOutput(newPOT, outputPOT);
             }
         }
 
