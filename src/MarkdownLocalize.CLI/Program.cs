@@ -129,7 +129,13 @@ namespace MarkdownLocalize.CLI
                 {
                     string extension = this.Action == ACTION_GENERATE_POT ? ".pot" : ".po";
                     string poFile = Path.Combine(poDirectory, Path.ChangeExtension(filename, extension));
-                    DoFile(f, outputFile, poFile);
+                    if (File.Exists(poFile))
+                        DoFile(f, outputFile, poFile);
+                    else
+                    {
+                        string relativePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), poFile);
+                        Log("Missing " + relativePath + " file. Skipping...");
+                    }
                 }
                 else
                     DoFile(f, outputFile, this.POTFile);
