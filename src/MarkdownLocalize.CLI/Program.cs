@@ -129,13 +129,7 @@ namespace MarkdownLocalize.CLI
                 {
                     string extension = this.Action == ACTION_GENERATE_POT ? ".pot" : ".po";
                     string poFile = Path.Combine(poDirectory, Path.ChangeExtension(filename, extension));
-                    if (File.Exists(poFile))
-                        DoFile(f, outputFile, poFile);
-                    else
-                    {
-                        string relativePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), poFile);
-                        Log("Missing " + relativePath + " file. Skipping...");
-                    }
+                    DoFile(f, outputFile, poFile);
                 }
                 else
                     DoFile(f, outputFile, this.POTFile);
@@ -171,8 +165,17 @@ namespace MarkdownLocalize.CLI
                     GeneratePOT(input, poFile);
                     break;
                 case ACTION_TRANSLATE:
-                    Log($"Translating {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)}...");
-                    Translate(input, output, poFile);
+                    if (File.Exists(poFile))
+                    {
+                        Log($"Translating {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)}...");
+                        Translate(input, output, poFile);
+                    }
+                    else
+                    {
+                        string relativePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), poFile);
+                        Log("Missing " + relativePath + " file. Skipping...");
+                    }
+
                     break;
                 case ACTION_GOOGLE_TRANSLATE:
                     Log($"Google translating {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)} to {Locale}");
