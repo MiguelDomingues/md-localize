@@ -466,4 +466,11 @@ More text";
         Assert.Equal(new string[] { "Name", "Job Role", "John" }, strings);
     }
 
+    [Fact]
+    public void Brackets()
+    {
+        string md = @"[First].{Second}";
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "[First].{Second}" }, strings);
+    }
 }

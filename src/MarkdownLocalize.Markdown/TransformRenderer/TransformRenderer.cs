@@ -154,7 +154,7 @@ namespace MarkdownLocalize.Markdown
                     int trimEndIndex = childMarkdown.TrimEnd().Length;
                     trimChildEnd.Add(childMarkdown.Substring(trimEndIndex));
 
-                    trimmedS += childMarkdown.Trim() + "\n";
+                    trimmedS += childMarkdown.Trim() + (CheckAddNewLine(childMarkdown.Trim()) ? "\n" : "");
                     //lastIndex += childMarkdown.Length;
                     lastIndex = i.Span.End + 1;
                 }
@@ -197,6 +197,10 @@ namespace MarkdownLocalize.Markdown
             SkipTo(childs.Last().Span.End + 1);
         }
 
+        private bool CheckAddNewLine(string v)
+        {
+            return v != "[";
+        }
 
         private void PushElementType(ElementType? e)
         {
