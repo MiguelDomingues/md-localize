@@ -136,6 +136,7 @@ namespace MarkdownLocalize.Markdown
 
             string trimmedS = "";
             int lastIndex = index;
+            Inline previous = null;
             foreach (Inline i in childs)
             {
                 if (i is LineBreakInline)
@@ -152,11 +153,19 @@ namespace MarkdownLocalize.Markdown
                 if (childMarkdown.Trim().Length != 0)
                 {
                     int trimEndIndex = childMarkdown.TrimEnd().Length;
-                    trimChildEnd.Add(childMarkdown.Substring(trimEndIndex));
 
-                    trimmedS += childMarkdown.Trim() + (CheckAddNewLine(childMarkdown.Trim()) ? "\n" : "");
+                    if (markdownBefore.Contains("\n"))
+                        trimmedS += "\n";
+                    trimmedS += childMarkdown.Trim() + (i is LiteralInline ? "" : "\n");
                     //lastIndex += childMarkdown.Length;
                     lastIndex = i.Span.End + 1;
+                    if (previous is LiteralInline && i is LiteralInline)
+                    {
+                        trimmedS += childMarkdown.Substring(trimEndIndex);
+                        trimChildEnd.Add("");
+                    }
+                    else
+                        trimChildEnd.Add(childMarkdown.Substring(trimEndIndex));
                 }
                 else
                 {
@@ -164,7 +173,7 @@ namespace MarkdownLocalize.Markdown
                     trimChildEnd.Add("");
                     lastIndex += childMarkdown.Length;
                 }
-
+                previous = i;
             }
 
             string transformedS = CheckTransform(trimmedS.Trim(), index, true);
@@ -195,11 +204,6 @@ namespace MarkdownLocalize.Markdown
                 }
             }
             SkipTo(childs.Last().Span.End + 1);
-        }
-
-        private bool CheckAddNewLine(string v)
-        {
-            return v != "[";
         }
 
         private void PushElementType(ElementType? e)
