@@ -467,10 +467,76 @@ More text";
     }
 
     [Fact]
-    public void Brackets()
+    public void BracketsNoCustomAttributes()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = false
+        });
         string md = @"[First].{Second}";
         IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
         Assert.Equal(new string[] { "[First].{Second}" }, strings);
     }
+
+    [Fact]
+    public void BracketsCustomAttributes()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = true
+        });
+        string md = @"[First].{Second}";
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "[First]." }, strings);
+    }
+
+    [Fact]
+    public void BracketsEscapeCustomAttributes()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = true
+        });
+        string md = @"[First].\{Second\}";
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { @"[First].\{Second\}" }, strings);
+    }
+
+    [Fact]
+    public void BracketsEscapeNoCustomAttributes()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = false
+        });
+        string md = @"[First].\{Second\}";
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { @"[First].\{Second\}" }, strings);
+    }
+
+    [Fact]
+    public void MultipleBrackets()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = true
+        });
+        string md = @"\<First\> and \<First\>.[Second]
+
+\{First\} and \{First\}.\<Second\>
+
+\{First\} and \{First\}.[Second]
+
+\<First\> and \<First\>.\<Second\>[First].\{Second\}";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            @"\<First\> and \<First\>.[Second]",
+            @"\{First\} and \{First\}.\<Second\>",
+            @"\{First\} and \{First\}.[Second]",
+            @"\<First\> and \<First\>.\<Second\>[First].\{Second\}" }, strings);
+    }
+
+
+
 }
