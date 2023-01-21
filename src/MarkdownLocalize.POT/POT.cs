@@ -158,7 +158,7 @@ public class POT
             {
                 translation = si.String;
             }
-            return translation != null ? translation.Trim() : null;
+            return translation != null ? translation.Trim() : "";
         }, fileName, pathToSource, catalog.Language, out info);
 
         return translatedMarkdown;
