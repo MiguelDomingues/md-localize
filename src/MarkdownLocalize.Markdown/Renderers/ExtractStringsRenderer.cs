@@ -16,7 +16,7 @@ namespace MarkdownLocalize.Markdown
                 String = s,
                 Context = GetElementType(),
                 ReferenceLine = GetLinePosition(index),
-                ReferenceFile = this.FileName,
+                ReferenceFile = !String.IsNullOrEmpty(this.FileName) ? this.FileName.Replace("\\", "/") : "",
                 IsMarkdown = isMarkdown,
             });
             return s;
