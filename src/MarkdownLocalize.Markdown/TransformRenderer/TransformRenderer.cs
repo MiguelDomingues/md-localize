@@ -159,7 +159,7 @@ namespace MarkdownLocalize.Markdown
                     trimmedS += childMarkdown.Trim() + (i is LiteralInline ? "" : "\n");
                     //lastIndex += childMarkdown.Length;
                     lastIndex = i.Span.End + 1;
-                    if (previous is LiteralInline && i is LiteralInline)
+                    if ((previous == null || previous is LiteralInline) && i is LiteralInline)
                     {
                         trimmedS += childMarkdown.Substring(trimEndIndex);
                         trimChildEnd.Add("");

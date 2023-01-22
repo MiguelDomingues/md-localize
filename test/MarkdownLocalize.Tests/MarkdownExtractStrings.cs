@@ -538,5 +538,21 @@ More text";
     }
 
 
+    [Fact]
+    public void MultipleStrings()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableCustomAttributes = true
+        });
+        string md = @"The first. *The second!";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            "The first. *The second!" }, strings);
+    }
+
+
+
 
 }
