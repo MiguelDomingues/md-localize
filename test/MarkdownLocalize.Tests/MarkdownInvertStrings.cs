@@ -164,7 +164,24 @@ public class MarkdownInvertString
         Assert.Equal(expected, md);
     }
 
+    [Fact]
+    public void ListIndented()
+    {
+        string original = @"
+1. an item
 
+    a string
+    with a second line";
+
+        string expected = @"
+1. meti na
+
+    enil dnoces a htiw
+    gnirts a";
+
+        string md = MarkdownParser.Translate(original, InvertString, null, null, null, out _);
+        Assert.Equal(expected, md);
+    }
 }
 
 

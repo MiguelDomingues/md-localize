@@ -368,4 +368,17 @@ Column A | Column B
         Assert.Equal(md, echoMD);
     }
 
+    [Fact]
+    public void ListIndented()
+    {
+        string md = @"
+1. an item
+
+    a string
+    with a second line";
+
+        string echoMD = MarkdownParser.Echo(md);
+        Assert.Equal(md, echoMD);
+    }
+
 }
