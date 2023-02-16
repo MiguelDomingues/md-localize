@@ -63,6 +63,9 @@ namespace MarkdownLocalize.Markdown
                         childsEnd = childsEnd.Append(childs.Last());
                         childs = childs.SkipLast(1);
                     }
+                    // Childs are in reverse order
+                    childsEnd = childsEnd.Reverse().ToList();
+
                     var lastChildTransform = childs.Last();
 
                     if (childs.Count() == 1)
