@@ -150,9 +150,12 @@ namespace MarkdownLocalize.CLI
         {
             if (!String.IsNullOrEmpty(FileSuffix))
             {
-                string outputDir = Path.GetDirectoryName(output);
-                string outputExt = Path.GetExtension(output);
-                output = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(output) + FileSuffix + outputExt);
+                if (this.Action != ACTION_TRANSLATE)
+                {
+                    string outputDir = Path.GetDirectoryName(output);
+                    string outputExt = Path.GetExtension(output);
+                    output = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(output) + FileSuffix + outputExt);
+                }
 
                 string poFileDir = Path.GetDirectoryName(poFile);
                 string poFileExt = Path.GetExtension(poFile);
