@@ -107,6 +107,7 @@ namespace MarkdownLocalize.CLI
 
         private int OnExecute()
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             InitMarkdownParserOptions();
             if (GoogleTranslateCredentials != null)
                 Google.GoogleTranslate.InitCredentials(GoogleTranslateCredentials, GoogleProjectId);
@@ -219,14 +220,23 @@ namespace MarkdownLocalize.CLI
         {
             string pot = File.ReadAllText(inputPOT);
             var catalog = POT.Load(pot);
+            var outputCatalog = File.Exists(outputPO) ? POT.Load(File.ReadAllText(outputPO)) : null;
             catalog.Language = Locale;
             foreach (IPOEntry e in catalog.Values)
             {
                 switch (e)
                 {
                     case POSingularEntry s:
-                        Log($"Translating {s.Key.Id}");
-                        s.Translation = Google.GoogleTranslate.Translate(s.Key.Id, Locale);
+                        if (outputCatalog != null && !String.IsNullOrEmpty(outputCatalog.GetTranslation(s.Key)))
+                        {
+                            s.Translation = outputCatalog.GetTranslation(s.Key);
+                            Log($"Reusing translation {s.Key.Id} / " + s.Translation);
+                        }
+                        else
+                        {
+                            Log($"Translating {s.Key.Id}");
+                            s.Translation = Google.GoogleTranslate.Translate(s.Key.Id, Locale);
+                        }
                         break;
                     default:
                         throw new Exception("Unable to translate " + e.GetType());
