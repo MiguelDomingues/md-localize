@@ -125,11 +125,14 @@ namespace MarkdownLocalize.CLI
 
         private void DoDirectory(string input, string output, string poDirectory)
         {
-            foreach (string f in Directory.GetFiles(input, "*.md"))
+            string searchPattern = "*.md";
+            if (this.Action == ACTION_GOOGLE_TRANSLATE)
+                searchPattern = "*" + FileSuffix + ".pot";
+            foreach (string f in Directory.GetFiles(input, searchPattern))
             {
                 string filename = Path.GetFileName(f);
                 string outputFile = Path.Combine(output, filename);
-                if (this.POTFile == "" || this.POTFile == null)
+                if ((this.POTFile == "" || this.POTFile == null) && poDirectory != null)
                 {
                     string extension = this.Action == ACTION_GENERATE_POT ? ".pot" : ".po";
                     string poFile = Path.Combine(poDirectory, Path.ChangeExtension(filename, extension));
@@ -153,16 +156,21 @@ namespace MarkdownLocalize.CLI
         {
             if (!String.IsNullOrEmpty(FileSuffix))
             {
-                if (this.Action != ACTION_TRANSLATE)
+                if (this.Action != ACTION_TRANSLATE && this.Action != ACTION_GOOGLE_TRANSLATE)
                 {
                     string outputDir = Path.GetDirectoryName(output);
                     string outputExt = Path.GetExtension(output);
                     output = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(output) + FileSuffix + outputExt);
                 }
+                if (Path.GetExtension(output) == ".pot")
+                    output = Path.ChangeExtension(output, ".po");
 
-                string poFileDir = Path.GetDirectoryName(poFile);
-                string poFileExt = Path.GetExtension(poFile);
-                poFile = Path.Combine(poFileDir, Path.GetFileNameWithoutExtension(poFile) + FileSuffix + poFileExt);
+                if (poFile != null)
+                {
+                    string poFileDir = Path.GetDirectoryName(poFile);
+                    string poFileExt = Path.GetExtension(poFile);
+                    poFile = Path.Combine(poFileDir, Path.GetFileNameWithoutExtension(poFile) + FileSuffix + poFileExt);
+                }
             }
             UpdateRelativePaths(input, output);
             switch (Action)
