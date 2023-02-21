@@ -207,3 +207,8 @@ If the original markdown does not have any front-matter, then this option won't 
 
 Optional suffix to append to the output file names.
 This affects the files specified in `--output`, `--po-file` or `--po-dir`
+
+### --append-pot
+
+Only used whe `--action` is set to `generate-pot`.
+If used, and output file exists, then the .pot file is updated.

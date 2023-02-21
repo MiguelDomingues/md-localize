@@ -105,6 +105,9 @@ namespace MarkdownLocalize.CLI
         [Option("--file-suffix", "Suffix to add to output files.", CommandOptionType.SingleValue)]
         public string FileSuffix { get; } = "";
 
+        [Option("--append-pot", "Append to existing .pot file if it exists.", CommandOptionType.NoValue)]
+        public bool AppendPot { get; } = false;
+
         private int OnExecute()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -261,7 +264,7 @@ namespace MarkdownLocalize.CLI
             string md = File.ReadAllText(inputMarkdown);
             IEnumerable<StringInfo> strings = Markdown.MarkdownParser.ExtractStrings(md, inputMarkdown);
             Log($"Found {strings.Count()} strings.");
-            string pot = File.Exists(outputPOT) ? File.ReadAllText(outputPOT) : "";
+            string pot = AppendPot && File.Exists(outputPOT) ? File.ReadAllText(outputPOT) : "";
             if (pot == "")
             {
                 if (strings.Count() > 0)
