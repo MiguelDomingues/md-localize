@@ -54,5 +54,8 @@ namespace MarkdownLocalize.Markdown
 
         [Description("Link definition")]
         LINK_DEFINITION,
+
+        [Description("Empty block")]
+        EMPTY_BLOCK,
     }
 }
