@@ -211,17 +211,10 @@ namespace MarkdownLocalize.CLI
             string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, KeepSourceStrings, out info);
             Log(string.Format(TRANSLATION_INFO, info.TranslatedCount, info.TotalCount));
             int ratio = info.TotalCount > 0 ? (int)(info.TranslatedCount * 1.0 / info.TotalCount * 100) : 0;
-            if (info.TotalCount > 0)
-            {
-                if (ratio >= MinRatio)
-                    WriteToOutput(translatedMarkdown, outputMarkdown);
-                else
-                    Console.Error.WriteLine("Skipping write file. Translation ratio is {0}%, below target of {1}%.", ratio, MinRatio);
-            }
+            if (ratio >= MinRatio)
+                WriteToOutput(translatedMarkdown, outputMarkdown);
             else
-            {
-                Console.Error.WriteLine("Skipping write file. Nothing to translate.");
-            }
+                Console.Error.WriteLine("Skipping write file. Translation ratio is {0}%, below target of {1}%.", ratio, MinRatio);
             if (info.MissingStrings.Count() > 0)
             {
                 Console.Error.WriteLine("Missing translations:");
