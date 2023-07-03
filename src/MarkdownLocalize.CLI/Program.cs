@@ -108,6 +108,9 @@ namespace MarkdownLocalize.CLI
         [Option("--append-pot", "Append to existing .pot file if it exists.", CommandOptionType.NoValue)]
         public bool AppendPot { get; } = false;
 
+        [Option("--ignore-missing-po", "Write output if .po file is missing.", CommandOptionType.NoValue)]
+        public bool IgnoreMissingPO { get; } = false;
+
         private int OnExecute()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -180,7 +183,7 @@ namespace MarkdownLocalize.CLI
                     GeneratePOT(input, poFile);
                     break;
                 case ACTION_TRANSLATE:
-                    if (File.Exists(poFile))
+                    if (File.Exists(poFile) || IgnoreMissingPO)
                     {
                         Log($"Translating {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)}...");
                         Translate(input, output, poFile);
@@ -204,8 +207,16 @@ namespace MarkdownLocalize.CLI
         private void Translate(string inputMarkdown, string outputMarkdown, string inputPO)
         {
             string md = File.ReadAllText(inputMarkdown);
-            string po = File.ReadAllText(inputPO);
-            var catalog = POT.Load(po);
+            POCatalog catalog;
+            if (!File.Exists(inputPO) && IgnoreMissingPO)
+            {
+                catalog = new POCatalog();
+            }
+            else
+            {
+                string po = File.ReadAllText(inputPO);
+                catalog = POT.Load(po);
+            }
             TranslationInfo info;
             string relativeToSource = PathUtils.GetRelativePath(outputMarkdown, inputMarkdown, true);
             string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, KeepSourceStrings, out info);

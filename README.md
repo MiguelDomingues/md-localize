@@ -212,3 +212,8 @@ This affects the files specified in `--output`, `--po-file` or `--po-dir`
 
 Only used whe `--action` is set to `generate-pot`.
 If used, and output file exists, then the .pot file is updated.
+
+### --ignore-missing-po
+
+Ignore missing .po file.
+This should be used with `--keep-source-strings`.
