@@ -26,8 +26,10 @@ namespace MarkdownLocalize.Markdown
                 }
                 else if (renderer.Options.ParseHtml)
                 {
-                    using var context = BrowsingContext.New(Configuration.Default);
-                    using var doc = context.OpenAsync(req => req.Content($"<html><body>{html}</body></html>")).GetAwaiter().GetResult();
+                    if (renderer.Options.ImageRelativePath != null)
+                        html = UpdateImageRelativePaths(renderer.Options.ImageRelativePath, html);
+
+                    IDocument doc = GetDocument(html);
                     string parsedHTML = doc.Body.InnerHtml;
 
                     int extractedStrings = 0;
@@ -55,7 +57,7 @@ namespace MarkdownLocalize.Markdown
                         }
                     }
 
-                    if (extractedStrings > 0)
+                    if (extractedStrings > 0 || renderer.Options.ImageRelativePath != null)
                     {
                         if (html.ReplaceLineEndings("\n") != parsedHTML)
                         {
@@ -73,6 +75,31 @@ namespace MarkdownLocalize.Markdown
                     renderer.WriteRaw(html, obj.Span.Start);
                 }
                 renderer.PopElementType();
+            }
+
+            private string UpdateImageRelativePaths(string relativePath, string html)
+            {
+                IDocument doc = GetDocument(html);
+                string parsedHTML = doc.Body.InnerHtml;
+
+                foreach (var node in doc.Body.Descendents())
+                {
+                    if (node is IHtmlImageElement img)
+                    {
+                        string originalSrc = img.GetAttribute("src") ?? "";
+                        string newSrc = Path.Combine(relativePath, originalSrc);
+                        img.SetAttribute("src", newSrc);
+                    }
+                }
+
+                return doc.Body.InnerHtml;
+            }
+
+            private static IDocument GetDocument(string html)
+            {
+                IBrowsingContext context = BrowsingContext.New(Configuration.Default);
+                var doc = context.OpenAsync(req => req.Content($"<html><body>{html}</body></html>")).GetAwaiter().GetResult();
+                return doc;
             }
 
             private ElementType? NodeToElementType(INode node)
