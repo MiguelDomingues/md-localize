@@ -15,7 +15,6 @@ namespace MarkdownLocalize.CLI
     {
         private const string ACTION_GENERATE_POT = "generate-pot";
         private const string ACTION_TRANSLATE = "translate";
-        private const string ACTION_GOOGLE_TRANSLATE = "google-translate";
         public const string TRANSLATION_INFO = "Translated {0} out of {1} strings.";
 
         public static int Main(string[] args)
@@ -24,7 +23,7 @@ namespace MarkdownLocalize.CLI
         }
 
         [Option("--action|-a", "The action to perform.", CommandOptionType.SingleValue)]
-        [AllowedValues(ACTION_GENERATE_POT, ACTION_TRANSLATE, ACTION_GOOGLE_TRANSLATE, IgnoreCase = true)]
+        [AllowedValues(ACTION_GENERATE_POT, ACTION_TRANSLATE, IgnoreCase = true)]
         public string Action { get; }
 
         [Option("--input|-i", "Input file/directory.", CommandOptionType.SingleValue)]
@@ -78,12 +77,6 @@ namespace MarkdownLocalize.CLI
         [Option("--markdown-translator-comment|-mtc", "Extra translator comment to add to .pot.", CommandOptionType.MultipleValue)]
         public string[] TranslatorComments { get; } = new string[] { };
 
-        [Option("--google-translate-credentials|-gtc", "Path to Google translate .json credentials file.", CommandOptionType.SingleValue)]
-        public string GoogleTranslateCredentials { get; } = null;
-
-        [Option("--google-project-id|-gid", "Google Cloud console Project ID.", CommandOptionType.SingleValue)]
-        public string GoogleProjectId { get; } = null;
-
         [Option("--update-image-relative-paths", "Update images relative paths to refer original files.", CommandOptionType.NoValue)]
         public bool UpdateImageRelativePaths { get; } = false;
 
@@ -115,8 +108,6 @@ namespace MarkdownLocalize.CLI
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             InitMarkdownParserOptions();
-            if (GoogleTranslateCredentials != null)
-                Google.GoogleTranslate.InitCredentials(GoogleTranslateCredentials, GoogleProjectId);
             if (File.GetAttributes(Input).HasFlag(FileAttributes.Directory))
             {
                 DoDirectory(Input, Output, this.POTDirectory);
@@ -129,8 +120,6 @@ namespace MarkdownLocalize.CLI
         private void DoDirectory(string input, string output, string poDirectory)
         {
             string searchPattern = "*.md";
-            if (this.Action == ACTION_GOOGLE_TRANSLATE)
-                searchPattern = "*" + FileSuffix + ".pot";
             foreach (string f in Directory.GetFiles(input, searchPattern))
             {
                 string filename = Path.GetFileName(f);
@@ -159,7 +148,7 @@ namespace MarkdownLocalize.CLI
         {
             if (!String.IsNullOrEmpty(FileSuffix))
             {
-                if (this.Action != ACTION_TRANSLATE && this.Action != ACTION_GOOGLE_TRANSLATE)
+                if (this.Action != ACTION_TRANSLATE)
                 {
                     string outputDir = Path.GetDirectoryName(output);
                     string outputExt = Path.GetExtension(output);
@@ -195,10 +184,6 @@ namespace MarkdownLocalize.CLI
                     }
 
                     break;
-                case ACTION_GOOGLE_TRANSLATE:
-                    Log($"Google translating {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)} to {Locale}");
-                    GoogleTranslate(input, output);
-                    break;
                 default:
                     throw new NotImplementedException("Action: " + EnumUtils.GetEnumMemberAttrValue(Action));
             }
@@ -232,35 +217,6 @@ namespace MarkdownLocalize.CLI
                 foreach (string s in info.MissingStrings)
                     Console.Error.WriteLine("  {0}", s);
             }
-        }
-
-        private void GoogleTranslate(string inputPOT, string outputPO)
-        {
-            string pot = File.ReadAllText(inputPOT);
-            var catalog = POT.Load(pot);
-            var outputCatalog = File.Exists(outputPO) ? POT.Load(File.ReadAllText(outputPO)) : null;
-            catalog.Language = Locale;
-            foreach (IPOEntry e in catalog.Values)
-            {
-                switch (e)
-                {
-                    case POSingularEntry s:
-                        if (outputCatalog != null && !String.IsNullOrEmpty(outputCatalog.GetTranslation(s.Key)))
-                        {
-                            s.Translation = outputCatalog.GetTranslation(s.Key);
-                            Log($"Reusing translation {s.Key.Id} / " + s.Translation);
-                        }
-                        else
-                        {
-                            Log($"Translating {s.Key.Id}");
-                            s.Translation = Google.GoogleTranslate.Translate(s.Key.Id, Locale);
-                        }
-                        break;
-                    default:
-                        throw new Exception("Unable to translate " + e.GetType());
-                }
-            }
-            WriteToOutput(POT.Write(catalog), outputPO);
         }
 
         private void Log(string message)

@@ -88,7 +88,7 @@ If you used multiple .pot files in the Extract Strings stage, you need to specif
 
 ### --action <OPTION>, -a <OPTION>
 
-Valid options are: `generate-pot`, `translate` and `google-translate`
+Valid options are: `generate-pot` and `translate`
 
 ### --input <FILE>, -i <FILE>
 
@@ -172,11 +172,6 @@ Only valid with `generate-pot` action.
 
 A locale code.
 Examples: pt-BR, ja-JP
-
-### --google-translate-credentials <FILE>, -gtc <FILE>
-
-Path to Google translate .json credentials file.
-The file is obtained from a service account in the Google Cloud Console.
 
 ### --update-image-relative-paths
 
