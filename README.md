@@ -1,4 +1,4 @@
-# Markdown POT
+# Markdown Localize
 
 This tool was designed to be used in combination with an third-party localization tool that supports .pot/.po (gettext) files.
 The process encompasses three stages:
@@ -13,8 +13,8 @@ The diagram below shows the process when using this tool:
 flowchart LR
    
     subgraph Rebuild Markdown
-    locale.po-->lmd1[./markdown-pot ARGS<br />    -action translate<br />    -i markdown1.md<br />    -po locale.po<br />    -o locale/markdown1.pot]
-    locale.po-->lmd2[./markdown-pot ARGS<br />    -action translate<br />    -i markdown2.md<br />    -po locale.po<br />    -o locale/markdown2.pot]
+    locale.po-->lmd1[./md-localize ARGS<br />    -action translate<br />    -i markdown1.md<br />    -po locale.po<br />    -o locale/markdown1.pot]
+    locale.po-->lmd2[./md-localize ARGS<br />    -action translate<br />    -i markdown2.md<br />    -po locale.po<br />    -o locale/markdown2.pot]
     style lmd1 text-align:left
     style lmd2 text-align:left
     end
@@ -22,8 +22,8 @@ flowchart LR
     tr[Use third-party<br />translation tool]-->locale.po
     end
     subgraph Extract Strings
-    md1[./markdown-pot ARGS<br />    -action generate-pot<br />    -i markdown1.md<br />    -o strings.pot]-->strings.pot
-    md2[./markdown-pot ARGS<br />    -action generate-pot<br />    -i markdown1.md<br />    -o strings.pot]-->strings.pot
+    md1[./md-localize ARGS<br />    -action generate-pot<br />    -i markdown1.md<br />    -o strings.pot]-->strings.pot
+    md2[./md-localize ARGS<br />    -action generate-pot<br />    -i markdown1.md<br />    -o strings.pot]-->strings.pot
     style md1 text-align:left
     style md2 text-align:left
     end
@@ -37,7 +37,7 @@ This is the first stage and it is where source files are scanned to extract stri
 The following command line should be used:
 
 ```bash
-./markdown-pot --action generate-pot --input path/to/markdown.md --output path/to/strings.pot
+./md-localize --action generate-pot --input path/to/markdown.md --output path/to/strings.pot
 ```
 
 The output file used here will be needed in the next stage.
@@ -53,12 +53,12 @@ When the first command of a group is executed, and if the output .pot file does 
 When the following commands of the same group are executed, the .pot file exists and extracted strings are appended to the file.
 
 ```bash
-./markdown-pot --action generate-pot --input path/to/markdown-A1.md --output path/to/strings-A.pot
-./markdown-pot --action generate-pot --input path/to/markdown-A2.md --output path/to/strings-A.pot
-./markdown-pot --action generate-pot --input path/to/markdown-A3.md --output path/to/strings-A.pot
+./md-localize --action generate-pot --input path/to/markdown-A1.md --output path/to/strings-A.pot
+./md-localize --action generate-pot --input path/to/markdown-A2.md --output path/to/strings-A.pot
+./md-localize --action generate-pot --input path/to/markdown-A3.md --output path/to/strings-A.pot
 
-./markdown-pot --action generate-pot --input path/to/markdown-B1.md --output path/to/strings-B.pot
-./markdown-pot --action generate-pot --input path/to/markdown-B2.md --output path/to/strings-B.pot
+./md-localize --action generate-pot --input path/to/markdown-B1.md --output path/to/strings-B.pot
+./md-localize --action generate-pot --input path/to/markdown-B2.md --output path/to/strings-B.pot
 ```
 
 ## Translate
@@ -76,7 +76,7 @@ As a result the `markdown.locale.md` file is created.
 The simplest command is as follows:
 
 ```bash
-./markdown-pot --action translate --input path/to/markdown.md --po path/to/strings.locale.po --output path/to/markdown.locale.md
+./md-localize --action translate --input path/to/markdown.md --po path/to/strings.locale.po --output path/to/markdown.locale.md
 ```
 
 The command above should be executed for each source Markdown file.
