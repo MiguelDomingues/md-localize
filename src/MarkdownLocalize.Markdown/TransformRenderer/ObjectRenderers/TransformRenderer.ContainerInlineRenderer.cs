@@ -127,8 +127,8 @@ namespace MarkdownLocalize.Markdown
                     renderer.PopElementType();
                 }
 
-                if (!obj.LastChild.Span.IsEmpty)
-                    renderer.MoveTo(obj.LastChild.Span.End + 1);
+                //if (!obj.LastChild.Span.IsEmpty)
+                //    renderer.MoveTo(obj.LastChild.Span.End + 1);
             }
 
             private void ProcessChild(TransformRenderer renderer, Inline child)
