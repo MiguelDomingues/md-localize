@@ -29,4 +29,5 @@ public class RendererOptions
     public bool UpdateFrontMatterLocale { get; set; }
     public string Locale { get; set; }
     public Dictionary<string, string> AddFrontMatterKeys { get; set; }
+    public bool KeepLiteralsTogether = false;
 }

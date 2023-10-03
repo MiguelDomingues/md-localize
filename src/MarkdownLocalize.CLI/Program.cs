@@ -107,6 +107,9 @@ namespace MarkdownLocalize.CLI
         [Option("--ignore-missing-po", "Write output if .po file is missing.", CommandOptionType.NoValue)]
         public bool IgnoreMissingPO { get; } = false;
 
+        [Option("--keep-literals-together", "Keep multiple literals within the same block as a single string.", CommandOptionType.NoValue)]
+        public bool KeepLiteralsTogether { get; } = false;
+
         private int OnExecute()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -281,6 +284,7 @@ namespace MarkdownLocalize.CLI
                 FrontMatterSourceKey = FrontMatterSourceKey,
                 UpdateFrontMatterLocale = UpdateFrontMatterLocale,
                 AddFrontMatterKeys = ParseFrontMatterKeys(),
+                KeepLiteralsTogether = KeepLiteralsTogether,
                 EnableDefinitionLists = EnableDefinitionLists,
             });
         }

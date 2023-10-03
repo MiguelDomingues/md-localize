@@ -217,3 +217,8 @@ If used, and output file exists, then the .pot file is updated.
 
 Ignore missing .po file.
 This should be used with `--keep-source-strings`.
+
+### --keep-literals-together
+
+When multiple literals (e.g. hyperlink, text, emphasis) are part of the same markdown block (i.e. paragraph) keep them as a single string.
+This results in a string containing markdown.

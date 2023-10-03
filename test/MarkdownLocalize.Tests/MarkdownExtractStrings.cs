@@ -296,6 +296,9 @@ a = b
     [Fact]
     public void CodeBlockSurroundedByText()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+        });
         IEnumerable<string> strings = MarkdownParser.ExtractStrings(@"See the following example:
 ```language
 a = b
@@ -567,6 +570,84 @@ More text";
 
         IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
         Assert.Equal(new string[] { "Term 1", "This is a definition item", "And a last line", "This ia another definition item" }, strings);
+    }
+    [Fact]
+    public void MultipleLiteralsSeparate()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = false,
+        });
+        string md = @"  [Label](https://www.example.com) and text.  ";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Label", "and text." }, strings);
+    }
+
+
+    [Fact]
+    public void MultipleLiteralsTogether()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+        });
+        string md = @"  [Label](https://www.example.com) and text.  ";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "[Label](https://www.example.com) and text.", "Label" }, strings);
+    }
+
+    [Fact]
+    public void MultipleLiteralsTogetherImage()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+        });
+        string md = @"![](image.png) Text ";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Text" }, strings);
+    }
+
+    [Fact]
+    public void MultipleLiteralsTogetherBold()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+        });
+        string md = @"**Bold text**";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Bold text" }, strings);
+    }
+
+    [Fact]
+    public void MultipleLiteralsTogetherBullet()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+        });
+        string md = @"* ![](image.png) Text ";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Text" }, strings);
+    }
+
+    [Fact]
+    public void MultipleLiteralsTogetherBulletLink()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+        });
+        string md = @"* [Label](www.example.com)";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Label" }, strings);
     }
 
 }

@@ -128,6 +128,29 @@ namespace MarkdownLocalize.Markdown
             }
         }
 
+        private void WriteMultipleTogether(IEnumerable<Inline> childs, int index)
+        {
+            int startIndex = childs.Where(c => c.Span.Start > 0).First().Span.Start;
+            int endIndex = childs.Where(c => c.Span.End > 0).Last().Span.End;
+            string str = OriginalMarkdown.Substring(startIndex, endIndex - startIndex + 1);
+
+            int trimStartIndex = str.Length - str.TrimStart().Length;
+            string trimStart = str.Substring(0, trimStartIndex);
+            int trimEndIndex = str.TrimEnd().Length;
+            string trimEnd = str.Substring(trimEndIndex);
+
+            string transformedS = CheckTransform(str.Trim(), index, true);
+
+            if (transformedS == null)
+                throw new Exception("Missing translation for: " + str);
+
+            Write(trimStart);
+            Write(transformedS);
+            Write(trimEnd);
+
+            SkipTo(endIndex + 1);
+        }
+
         private void WriteMultiple(IEnumerable<Inline> childs, int index)
         {
             // Let's trim all lines, while saving trimmed text
