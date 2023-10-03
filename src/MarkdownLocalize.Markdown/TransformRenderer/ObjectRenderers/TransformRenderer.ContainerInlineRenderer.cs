@@ -44,6 +44,19 @@ namespace MarkdownLocalize.Markdown
                 // Move cursor to start of the obj element
                 renderer.MoveTo(obj.Span.Start);
 
+                if (renderer.Options.KeepLiteralsTogether)
+                    ProcessChildsTogether(renderer, obj);
+                else
+                    ProcessChildsSeparate(renderer, obj);
+
+                ExtractLabelsFromLinkInline(renderer, obj);
+
+                if (!obj.LastChild.Span.IsEmpty)
+                    renderer.MoveTo(obj.LastChild.Span.End + 1);
+            }
+
+            private void ProcessChildsSeparate(TransformRenderer renderer, ContainerInline obj)
+            {
                 // Let's skip childs from start
                 IEnumerable<Inline> childs = obj;
                 while (childs.Count() > 0 && SkipChild(childs.First()))
@@ -107,6 +120,78 @@ namespace MarkdownLocalize.Markdown
                         ProcessChild(renderer, i);
                     }
                 }
+            }
+
+            private bool SkipChildTogether(Inline i)
+            {
+                switch (i)
+                {
+                    case LineBreakInline:
+                    case LinkInline l when l.IsImage:
+                    case LiteralInline li when li.Content.ToString().Trim() == "":
+                        return true;
+                }
+                return false;
+            }
+
+            private void ProcessChildsTogether(TransformRenderer renderer, ContainerInline obj)
+            {
+                // Let's skip childs from start
+                IEnumerable<Inline> childs = obj;
+                while (childs.Count() > 0 && SkipChildTogether(childs.First()))
+                {
+                    ProcessChild(renderer, childs.First());
+                    childs = childs.Skip(1);
+                }
+
+                if (childs.Count() > 0)
+                {
+                    IEnumerable<Inline> childsEnd = new List<Inline>();
+
+                    // Let's skip childs from end
+                    while (childs.Count() > 0 && SkipChildTogether(childs.Last()))
+                    {
+                        childsEnd = childsEnd.Append(childs.Last());
+                        childs = childs.SkipLast(1);
+                    }
+                    // Childs are in reverse order
+                    childsEnd = childsEnd.Reverse().ToList();
+
+                    if (childs.Count() == 1)
+                    {
+                        if (SkipChild(childs.First()))
+                        {
+                            ProcessChild(renderer, childs.First());
+                            childs = childs.Skip(1);
+                        }
+                        else
+                        {
+                            switch (childs.First())
+                            {
+                                case EmphasisInline ei: // If only emphasis, then use childs of emphasis
+                                    childs = ei;
+                                    break;
+                                case CodeInline: // If only code inline, ignore
+                                case AutolinkInline: // if only auto link, ignore
+                                    childs = childs.Skip(1);
+                                    break;
+                            }
+                        }
+                    }
+                    if (childs.Count() > 0)
+                    {
+                        renderer.WriteMultipleTogether(childs, renderer.LastWrittenIndex);
+                    }
+
+                    foreach (Inline i in childsEnd)
+                    {
+                        ProcessChild(renderer, i);
+                    }
+                }
+            }
+
+            private static void ExtractLabelsFromLinkInline(TransformRenderer renderer, ContainerInline obj)
+            {
                 // Extract labels from urls
                 IEnumerable<LinkInline> links = obj.Where(c => c is LinkInline).Cast<LinkInline>().Where(l => l.FirstChild != null);
                 foreach (LinkInline l in links)
@@ -126,9 +211,6 @@ namespace MarkdownLocalize.Markdown
                     }
                     renderer.PopElementType();
                 }
-
-                if (!obj.LastChild.Span.IsEmpty)
-                    renderer.MoveTo(obj.LastChild.Span.End + 1);
             }
 
             private void ProcessChild(TransformRenderer renderer, Inline child)
