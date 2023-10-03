@@ -296,6 +296,9 @@ a = b
     [Fact]
     public void CodeBlockSurroundedByText()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+        });
         IEnumerable<string> strings = MarkdownParser.ExtractStrings(@"See the following example:
 ```language
 a = b
