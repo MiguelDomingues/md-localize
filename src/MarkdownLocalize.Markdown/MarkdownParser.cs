@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Markdig;
+using Markdig.Extensions.DefinitionLists;
 using Markdig.Syntax;
 using MarkdownLocalize.Utils;
 using static MarkdownLocalize.Markdown.TranslateRenderer;
@@ -114,6 +115,8 @@ public class MarkdownParser
                 builder = builder.UseTaskLists();
             if (Options != null && Options.EnableCustomAttributes)
                 builder.UseGenericAttributes(); // Must be last as it is one parser that is modifying other parsers
+            if (Options != null && Options.EnableDefinitionLists)
+                builder.UseDefinitionLists();
 
             builder = builder.EnableTrackTrivia();
 
@@ -150,6 +153,8 @@ public class MarkdownParser
                 return ElementType.LINK_DEFINITION;
             case EmptyBlock:
                 return ElementType.EMPTY_BLOCK;
+            case DefinitionTerm:
+                return ElementType.DEFINITION_TERM;
         }
         Console.Error.WriteLine("Unable to convert element fo type " + lb.GetType());
         return null;

@@ -134,6 +134,11 @@ If you need to specify multiple keys, repeat this argument.
 By default, image's alternative text is extracted.
 Use this option to ignore it.
 
+### --definition-lists
+
+Enable parsing of definition lists
+See [Definition lists](https://github.com/xoofx/markdig/blob/master/src/Markdig.Tests/Specs/DefinitionListSpecs.md#definition-lists) for more info.
+
 ### --custom-attributes
 
 Enable custom attributes to be parsed.
