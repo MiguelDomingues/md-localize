@@ -61,6 +61,9 @@ namespace MarkdownLocalize.CLI
         [Option("--custom-attributes", "Enable custom attributes (e.g. {.css-class}).", CommandOptionType.NoValue)]
         public bool CustomAttributes { get; } = false;
 
+        [Option("--definition-lists", "Enable definition lists.", CommandOptionType.NoValue)]
+        public bool EnableDefinitionLists { get; } = false;
+
         [Option("--ignore-pattern", "Regex patterns to ignore literals.", CommandOptionType.MultipleValue)]
         public string[] IgnorePatterns { get; } = new string[] { };
 
@@ -278,6 +281,7 @@ namespace MarkdownLocalize.CLI
                 FrontMatterSourceKey = FrontMatterSourceKey,
                 UpdateFrontMatterLocale = UpdateFrontMatterLocale,
                 AddFrontMatterKeys = ParseFrontMatterKeys(),
+                EnableDefinitionLists = EnableDefinitionLists,
             });
         }
 
