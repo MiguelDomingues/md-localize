@@ -129,6 +129,7 @@ namespace MarkdownLocalize.Markdown
                     case LineBreakInline:
                     case LinkInline l when l.IsImage:
                     case LiteralInline li when li.Content.ToString().Trim() == "":
+                    case TaskList:
                         return true;
                 }
                 return false;

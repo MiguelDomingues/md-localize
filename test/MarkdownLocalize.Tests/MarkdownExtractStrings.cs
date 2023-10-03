@@ -650,4 +650,18 @@ More text";
         Assert.Equal(new string[] { "Label" }, strings);
     }
 
+
+    [Fact]
+    public void MultipleLiteralsTogetherTaskList()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+        });
+        string md = @"- [x] Task list";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Task list" }, strings);
+    }
 }
