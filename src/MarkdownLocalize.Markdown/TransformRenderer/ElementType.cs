@@ -57,5 +57,8 @@ namespace MarkdownLocalize.Markdown
 
         [Description("Empty block")]
         EMPTY_BLOCK,
+
+        [Description("Definition term")]
+        DEFINITION_TERM,
     }
 }
