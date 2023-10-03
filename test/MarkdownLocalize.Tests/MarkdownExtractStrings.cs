@@ -553,6 +553,22 @@ More text";
     }
 
     [Fact]
+    public void DefinitionLists()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            EnableDefinitionLists = true,
+        });
+        string md = @"Term 1
+:   This is a definition item
+
+    And a last line
+:   This ia another definition item";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "Term 1", "This is a definition item", "And a last line", "This ia another definition item" }, strings);
+    }
+    [Fact]
     public void MultipleLiteralsSeparate()
     {
         MarkdownParser.SetParserOptions(new RendererOptions()
