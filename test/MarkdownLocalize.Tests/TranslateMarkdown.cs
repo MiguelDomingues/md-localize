@@ -67,6 +67,7 @@ public class TranslateMarkdown
     [Fact]
     public void Quote()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
         string md = POT.Translate(catalog, @"- Heading
@@ -87,6 +88,7 @@ public class TranslateMarkdown
     [Fact]
     public void QuoteTwo()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
         string md = POT.Translate(catalog, @"- Heading
@@ -107,6 +109,7 @@ public class TranslateMarkdown
     [Fact]
     public void ListWithIndentedText()
     {
+        MarkdownParser.SetParserOptions(new RendererOptions());
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
         string md = POT.Translate(catalog, @"1. Heading
@@ -136,4 +139,20 @@ public class TranslateMarkdown
         Assert.Equal(7, info.TranslatedCount);
     }
 
+    [Fact]
+    public void MultipleLiteralsTogetherImage()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"![Hello](image.png)", null, null, true, out info);
+
+        Assert.Equal(@"![Olá](image.png)", md);
+
+        Assert.Equal(1, info.TotalCount);
+        Assert.Equal(1, info.TranslatedCount);
+    }
 }
