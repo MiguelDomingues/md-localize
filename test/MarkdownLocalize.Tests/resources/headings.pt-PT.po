@@ -32,3 +32,7 @@ msgstr "Olá\nMundo"
 msgctxt "Image alternative text"
 msgid "Hello"
 msgstr "Olá"
+
+msgctxt "Text"
+msgid "Hello"
+msgstr "Olá"

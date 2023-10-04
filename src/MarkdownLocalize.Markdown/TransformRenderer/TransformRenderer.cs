@@ -144,6 +144,8 @@ namespace MarkdownLocalize.Markdown
             if (transformedS == null)
                 throw new Exception("Missing translation for: " + str);
 
+            MoveTo(startIndex);
+
             Write(trimStart);
             Write(transformedS);
             Write(trimEnd);
