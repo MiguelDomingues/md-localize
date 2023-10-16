@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.0.5" />
     <PackageReference Include="Markdig" Version="0.33.0" />
-    <PackageReference Include="YamlDotNet" Version="13.5.2" />
+    <PackageReference Include="YamlDotNet" Version="13.7.1" />
   </ItemGroup>
 
   <ItemGroup>
