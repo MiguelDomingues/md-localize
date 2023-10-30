@@ -26,15 +26,23 @@ namespace MarkdownLocalize.Markdown
                 }
                 else if (renderer.Options.ParseHtml)
                 {
-                    if (renderer.Options.ImageRelativePath != null)
-                        html = UpdateImageRelativePaths(renderer.Options.ImageRelativePath, html);
-
                     IDocument doc = GetDocument(html, out int positionOffset);
 
-                    if (renderer.Options.KeepHTMLTagsTogetherEnabled())
-                        ProcessHTMLTogether(renderer, doc.Body, html, obj.Span.Start);
+                    if (doc.Body.Descendants().Count() == 0)
+                    {
+                        // The HTML is probably mal-formed. We keep it as is
+                        renderer.Write(html);
+                    }
                     else
-                        ProcessHTMLIndependent(renderer, doc, html, obj.Span.Start);
+                    {
+                        if (renderer.Options.ImageRelativePath != null)
+                            html = UpdateImageRelativePaths(renderer.Options.ImageRelativePath, html);
+
+                        if (renderer.Options.KeepHTMLTagsTogetherEnabled())
+                            ProcessHTMLTogether(renderer, doc.Body, html, obj.Span.Start);
+                        else
+                            ProcessHTMLIndependent(renderer, doc, html, obj.Span.Start);
+                    }
                 }
                 else
                 {
@@ -75,9 +83,15 @@ namespace MarkdownLocalize.Markdown
                         }
                         else
                         {
-                            renderer.Write(trimmedStart);
-                            ProcessHTMLTogether(renderer, node, trimmedHtml, startOffset);
-                            renderer.Write(trimmedEnd);
+                            if (trimmedHtml != "")
+                            {
+                                renderer.Write(trimmedStart);
+                                ProcessHTMLTogether(renderer, node, trimmedHtml, startOffset);
+                                renderer.Write(trimmedEnd);
+                            }
+                            else
+                                renderer.Write(html);
+
                         }
                         renderer.PopElementType();
                     }
@@ -159,6 +173,8 @@ namespace MarkdownLocalize.Markdown
                 IDocument doc = GetDocument(html, out _);
                 string parsedHTML = doc.Body.InnerHtml;
 
+                int count = 0;
+
                 foreach (var node in doc.Body.Descendants())
                 {
                     if (node is IHtmlImageElement img)
@@ -166,8 +182,12 @@ namespace MarkdownLocalize.Markdown
                         string originalSrc = img.GetAttribute("src") ?? "";
                         string newSrc = Path.Combine(relativePath, originalSrc);
                         img.SetAttribute("src", newSrc);
+                        count++;
                     }
                 }
+
+                if (count == 0)
+                    return html;
 
                 return doc.Body.InnerHtml;
             }

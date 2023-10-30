@@ -155,4 +155,41 @@ public class TranslateMarkdown
         Assert.Equal(1, info.TotalCount);
         Assert.Equal(1, info.TranslatedCount);
     }
+
+
+    [Fact]
+    public void KeepHtmlTagsTogether()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            KeepHtmlTagsTogether = new string[] { "br", "b", "i", "sup", "code", "strong", "em", "a", },
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"# Heading
+
+Hello
+
+<p style=""font-size:12px"" markdown=""1"">
+
+Hello
+World
+
+</p>", null, null, true, out info);
+
+        Assert.Equal(@"# Título
+
+Olá
+
+<p style=""font-size:12px"" markdown=""1"">
+
+Olá
+Mundo
+
+</p>".ReplaceLineEndings(), md.ReplaceLineEndings());
+
+        Assert.Equal(5, info.TotalCount);
+        Assert.Equal(5, info.TranslatedCount);
+    }
 }
