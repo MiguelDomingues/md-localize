@@ -222,3 +222,8 @@ This should be used with `--keep-source-strings`.
 
 When multiple literals (e.g. hyperlink, text, emphasis) are part of the same markdown block (i.e. paragraph) keep them as a single string.
 This results in a string containing markdown.
+
+### --keep-html-together TAG
+
+When parsing HTML, if the HTML code contains only the tags specified by this flag, then the HTML is not broken into smaller chunks.
+This flag can be used multiple times to allow specifying multiple HTML tags.

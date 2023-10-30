@@ -60,5 +60,6 @@ namespace MarkdownLocalize.Markdown
 
         [Description("Definition term")]
         DEFINITION_TERM,
+
     }
 }

@@ -130,7 +130,7 @@ namespace MarkdownLocalize.Markdown
 
         private void WriteMultipleTogether(IEnumerable<Inline> childs, int index)
         {
-            int startIndex = childs.Where(c => c.Span.Start > 0).First().Span.Start;
+            int startIndex = childs.Where(c => c.Span.Start >= 0).First().Span.Start;
             int endIndex = childs.Where(c => c.Span.End > 0).Last().Span.End;
             string str = OriginalMarkdown.Substring(startIndex, endIndex - startIndex + 1);
 

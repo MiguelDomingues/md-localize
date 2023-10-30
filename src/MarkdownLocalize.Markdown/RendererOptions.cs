@@ -30,4 +30,19 @@ public class RendererOptions
     public string Locale { get; set; }
     public Dictionary<string, string> AddFrontMatterKeys { get; set; }
     public bool KeepLiteralsTogether = false;
+    public string[] KeepHtmlTagsTogether = new string[] { };
+
+
+    internal bool CheckKeepHTMLTagsTogether(IEnumerable<string> tags)
+    {
+        if (KeepHtmlTagsTogether.Length == 0)
+            return false;
+        IEnumerable<string> extraTags = tags.Where(t => !KeepHtmlTagsTogether.Select(t => t.ToLower()).Contains(t.ToLower()));
+        return !extraTags.Any();
+    }
+
+    internal bool KeepHTMLTagsTogetherEnabled()
+    {
+        return KeepHtmlTagsTogether.Length > 0;
+    }
 }

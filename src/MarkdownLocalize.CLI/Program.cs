@@ -110,6 +110,9 @@ namespace MarkdownLocalize.CLI
         [Option("--keep-literals-together", "Keep multiple literals within the same block as a single string.", CommandOptionType.NoValue)]
         public bool KeepLiteralsTogether { get; } = false;
 
+        [Option("--keep-html-together", "HTML tags to keep within text when extracting strings", CommandOptionType.MultipleValue)]
+        public string[] KeepHTMLTagsTogether { get; } = Array.Empty<string>();
+
         private int OnExecute()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -286,6 +289,7 @@ namespace MarkdownLocalize.CLI
                 AddFrontMatterKeys = ParseFrontMatterKeys(),
                 KeepLiteralsTogether = KeepLiteralsTogether,
                 EnableDefinitionLists = EnableDefinitionLists,
+                KeepHtmlTagsTogether = KeepHTMLTagsTogether,
             });
         }
 

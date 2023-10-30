@@ -664,4 +664,167 @@ More text";
         IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
         Assert.Equal(new string[] { "Task list" }, strings);
     }
+
+    [Fact]
+    public void HTMLBold()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+        });
+        string md = @"- In the <b>application server</b>, it applies the method round half up (rounds to the nearest integer, 0.5 rounds up)";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "In the <b>application server</b>, it applies the method round half up (rounds to the nearest integer, 0.5 rounds up)" }, strings);
+    }
+
+    [Fact]
+    public void HTMLParagraphWithBold()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "b" }
+        });
+        string md = @"<p>In the <b>application server</b>, it applies the method round half up (rounds to the nearest integer, 0.5 rounds up)</p>";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] { "In the <b>application server</b>, it applies the method round half up (rounds to the nearest integer, 0.5 rounds up)" }, strings);
+    }
+
+
+    [Fact]
+    public void HTMLParagraph()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+        });
+        string md = @"<p>Text line 1.<br/><br/>Text line 2:<br/><br/>- Text followed by <b>bold</b> and more text.<br/>Another line</p>";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            "Text line 1.",
+            "Text line 2:",
+            "- Text followed by",
+            "bold",
+            "and more text.",
+            "Another line"
+            }, strings);
+    }
+
+
+    [Fact]
+    public void HTMLParagraphHTMLTags()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "b", "br" }
+        });
+        string md = @"<p>Text line 1.<br/><br/>Text line 2:<br/><br/>- Text followed by <b>bold</b> and more text.<br/>Another line</p>";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            "Text line 1.<br><br>Text line 2:<br><br>- Text followed by <b>bold</b> and more text.<br>Another line"
+            }, strings);
+    }
+
+    [Fact]
+    public void HTMLParagraphInsideDiv()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "b", "br" },
+
+        });
+        string md = @"<div><p>Text line 1.<br/><br/>Text line 2:<br/><br/>- Text followed by <b>bold</b> and more text.<br/>Another line</p></div>";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            "Text line 1.<br><br>Text line 2:<br><br>- Text followed by <b>bold</b> and more text.<br>Another line"
+            }, strings);
+    }
+
+    [Fact]
+    public void HTMLTextAroundDIV()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "b", "br" }
+        });
+        string md = @"First line
+ 
+<div class=""info"">
+Info text.
+</div>
+
+Another line
+
+<div class=""info"">
+More info.
+</div>
+
+Last line";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            "First line",
+            "Info text.",
+            "Another line",
+            "More info.",
+            "Last line"
+            }, strings);
+    }
+
+
+    [Fact]
+    public void HTMLTable()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "b", "br" }
+        });
+        string md = @"<table>
+<thead>
+<tr>
+<th>Column 1</th>
+<th>Column 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text 1</td>
+<td>Text 2<br/>
+Another line
+</td>
+</tr>
+</tbody>
+</table>";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            "Column 1",
+            "Column 2",
+            "Text 1",
+            "Text 2<br>\nAnother line"
+            }, strings);
+    }
 }
