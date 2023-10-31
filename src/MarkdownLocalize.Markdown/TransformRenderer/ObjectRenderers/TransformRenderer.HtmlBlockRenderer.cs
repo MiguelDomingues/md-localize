@@ -43,7 +43,12 @@ namespace MarkdownLocalize.Markdown
                             html = UpdateImageRelativePaths(renderer.Options.ImageRelativePath, html);
 
                         if (renderer.Options.KeepHTMLTagsTogetherEnabled())
-                            ProcessHTMLTogether(renderer, doc.Body, html, obj.Span.Start);
+                        {
+                            if (doc.Body.Descendants<IText>().Count() > 0)
+                                ProcessHTMLTogether(renderer, doc.Body, html, obj.Span.Start);
+                            else
+                                renderer.Write(html);
+                        }
                         else
                             ProcessHTMLIndependent(renderer, doc, html, obj.Span.Start);
                     }
@@ -96,10 +101,7 @@ namespace MarkdownLocalize.Markdown
                             }
                             else
                             {
-                                if (text != "")
-                                    renderer.Write(nodeHtml.OuterHtml);
-                                else
-                                    renderer.Write(html);
+                                renderer.Write(nodeHtml.OuterHtml);
                             }
                         }
                         renderer.PopElementType();
