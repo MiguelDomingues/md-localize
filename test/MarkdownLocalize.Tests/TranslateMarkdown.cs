@@ -245,10 +245,30 @@ Olá".ReplaceLineEndings(), md.ReplaceLineEndings());
 <tbody>
 <tr>  
 <td>
-Hello
+Text 1
 </td>  
 <td>
-Hello
+Text 2
+</td></tr>  
+<tr>  
+<td>
+Text 3
+</td>  
+<td>
+Text 4
+</td></tr>  
+<tr>  
+<td>
+Text 5
+</td>  
+<td>
+Text 6
+</td></tr>  
+<tr>  
+<td>
+Text 7
+</td>  
+<td>
 </td></tr>  
 </tbody>
 </table>", null, null, true, out info);
@@ -257,15 +277,35 @@ Hello
 <tbody>
 <tr>  
 <td>
-Olá
+Text 1
 </td>  
 <td>
-Olá
+Text 2
+</td></tr>  
+<tr>  
+<td>
+Text 3
+</td>  
+<td>
+Text 4
+</td></tr>  
+<tr>  
+<td>
+Text 5
+</td>  
+<td>
+Text 6
+</td></tr>  
+<tr>  
+<td>
+Text 7
+</td>  
+<td>
 </td></tr>  
 </tbody>
 </table>".ReplaceLineEndings(), md.ReplaceLineEndings());
 
-        Assert.Equal(2, info.TotalCount);
-        Assert.Equal(2, info.TranslatedCount);
+        Assert.Equal(7, info.TotalCount);
+        Assert.Equal(7, info.TranslatedCount);
     }
 }

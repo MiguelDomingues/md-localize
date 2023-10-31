@@ -95,8 +95,12 @@ namespace MarkdownLocalize.Markdown
                                 renderer.Write(trimmedEnd.Trim());
                             }
                             else
-                                renderer.Write(html);
-
+                            {
+                                if (text != "")
+                                    renderer.Write(nodeHtml.OuterHtml);
+                                else
+                                    renderer.Write(html);
+                            }
                         }
                         renderer.PopElementType();
                     }
