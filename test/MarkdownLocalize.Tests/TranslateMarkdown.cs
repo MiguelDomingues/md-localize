@@ -163,6 +163,7 @@ public class TranslateMarkdown
         MarkdownParser.SetParserOptions(new RendererOptions()
         {
             KeepLiteralsTogether = true,
+            ParseHtml = true,
             KeepHtmlTagsTogether = new string[] { "br", "b", "i", "sup", "code", "strong", "em", "a", },
         });
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
@@ -189,7 +190,43 @@ Mundo
 
 </p>".ReplaceLineEndings(), md.ReplaceLineEndings());
 
-        Assert.Equal(5, info.TotalCount);
-        Assert.Equal(5, info.TranslatedCount);
+        Assert.Equal(3, info.TotalCount);
+        Assert.Equal(3, info.TranslatedCount);
+    }
+
+
+    [Fact]
+    public void WhiteSpaceAfterHTML()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "br", "b", "i", "sup", "code", "strong", "em", "a", },
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"# Heading
+
+<div class=""info"" markdown=""1"">
+
+Hello
+
+</div> 
+
+Hello", null, null, true, out info);
+
+        Assert.Equal(@"# Título
+
+<div class=""info"" markdown=""1"">
+
+Olá
+
+</div> 
+
+Olá".ReplaceLineEndings(), md.ReplaceLineEndings());
+
+        Assert.Equal(3, info.TotalCount);
+        Assert.Equal(3, info.TranslatedCount);
     }
 }

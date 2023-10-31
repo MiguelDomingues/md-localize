@@ -19,6 +19,10 @@ namespace MarkdownLocalize.Markdown
                 int length = obj.Span.End + 1 - obj.Span.Start;
 
                 string html = renderer.TakeNext(length);
+                string trimStart = html != html.TrimStart() ? html.Substring(0, html.Length - html.TrimStart().Length) : "";
+                string trimEnd = html != html.TrimEnd() ? html.Substring(html.TrimEnd().Length) : "";
+                html = html.Substring(trimStart.Length, html.Length - trimEnd.Length);
+                renderer.Write(trimStart);
 
                 if (!renderer.ShouldTransform(html))
                 {
@@ -48,6 +52,7 @@ namespace MarkdownLocalize.Markdown
                 {
                     renderer.WriteRaw(html, obj.Span.Start);
                 }
+                renderer.Write(trimEnd);
                 renderer.PopElementType();
             }
 

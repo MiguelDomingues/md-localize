@@ -227,3 +227,4 @@ This results in a string containing markdown.
 
 When parsing HTML, if the HTML code contains only the tags specified by this flag, then the HTML is not broken into smaller chunks.
 This flag can be used multiple times to allow specifying multiple HTML tags.
+To use this you must also enable HTML parsing with `--parse-html`.
