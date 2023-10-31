@@ -1,5 +1,6 @@
 using AngleSharp;
 using AngleSharp.Dom;
+using AngleSharp.Html;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using Markdig.Renderers;
@@ -73,19 +74,18 @@ namespace MarkdownLocalize.Markdown
                         renderer.PushElementType(NodeToElementType(node));
                         string text = nodeHtml.InnerHtml;
 
-                        int trimStartIndex = nodeHtml.OuterHtml.IndexOf(text.TrimStart());
-                        string trimmedStart = nodeHtml.OuterHtml.Substring(0, trimStartIndex);
+                        var formatter = new HtmlMarkupFormatter();
+                        var selfClose = node.Flags.HasFlag(NodeFlags.SelfClosing);
 
+                        string trimmedStart = formatter.OpenTag(nodeHtml, selfClose).ToString();
                         var trimmedHtml = text.Trim();
-
-                        int trimEndIndex = text.TrimEnd().Length;
-                        string trimmedEnd = nodeHtml.OuterHtml.Substring(trimStartIndex + trimmedHtml.Length);
+                        string trimmedEnd = formatter.CloseTag(nodeHtml, selfClose).ToString();
 
                         if (allTagsSkip && node.ChildNodes.Length > 1)
                         {
                             if (trimmedHtml != "" && renderer.ShouldTransform(nodeHtml.OuterHtml))
                             {
-                                string newHtml = trimmedStart.Trim() + renderer.Transform(trimmedHtml, startOffset + trimStartIndex, false) + trimmedEnd.Trim();
+                                string newHtml = trimmedStart + renderer.Transform(trimmedHtml, startOffset + trimmedStart.Length, false) + trimmedEnd.Trim();
                                 renderer.Write(newHtml);
                             }
                             else
