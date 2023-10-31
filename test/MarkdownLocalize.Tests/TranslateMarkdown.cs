@@ -229,4 +229,43 @@ Olá".ReplaceLineEndings(), md.ReplaceLineEndings());
         Assert.Equal(3, info.TotalCount);
         Assert.Equal(3, info.TranslatedCount);
     }
+
+    [Fact]
+    public void HTMLTable()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "br", "b", "i", "sup", "code", "strong", "em", "a", },
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"<table>  
+<tbody>
+<tr>  
+<td>
+Hello
+</td>  
+<td>
+Hello
+</td></tr>  
+</tbody>
+</table>", null, null, true, out info);
+
+        Assert.Equal(@"<table>  
+<tbody>
+<tr>  
+<td>
+Olá
+</td>  
+<td>
+Olá
+</td></tr>  
+</tbody>
+</table>".ReplaceLineEndings(), md.ReplaceLineEndings());
+
+        Assert.Equal(2, info.TotalCount);
+        Assert.Equal(2, info.TranslatedCount);
+    }
 }

@@ -80,7 +80,7 @@ namespace MarkdownLocalize.Markdown
                         {
                             if (trimmedHtml != "" && renderer.ShouldTransform(nodeHtml.OuterHtml))
                             {
-                                string newHtml = trimmedStart + renderer.Transform(trimmedHtml, startOffset + trimStartIndex, false) + trimmedEnd;
+                                string newHtml = trimmedStart.Trim() + renderer.Transform(trimmedHtml, startOffset + trimStartIndex, false) + trimmedEnd.Trim();
                                 renderer.Write(newHtml);
                             }
                             else
@@ -90,9 +90,9 @@ namespace MarkdownLocalize.Markdown
                         {
                             if (trimmedHtml != "")
                             {
-                                renderer.Write(trimmedStart);
+                                renderer.Write(trimmedStart.Trim());
                                 ProcessHTMLTogether(renderer, node, trimmedHtml, startOffset);
-                                renderer.Write(trimmedEnd);
+                                renderer.Write(trimmedEnd.Trim());
                             }
                             else
                                 renderer.Write(html);
