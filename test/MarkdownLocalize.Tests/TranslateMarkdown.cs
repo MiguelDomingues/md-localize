@@ -308,4 +308,22 @@ Text 7
         Assert.Equal(7, info.TotalCount);
         Assert.Equal(7, info.TranslatedCount);
     }
+
+    [Fact]
+    public void UpdateHTMLImagePath()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            ParseHtml = true,
+            ImageRelativePath = "../../",
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"<img src=""images/img.png"">", null, null, true, out info);
+
+        Assert.Equal(@"<img src=""../../images/img.png"">".ReplaceLineEndings(), md.ReplaceLineEndings());
+
+        Assert.Equal(0, info.TotalCount);
+        Assert.Equal(0, info.TranslatedCount);
+    }
 }

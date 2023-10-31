@@ -41,7 +41,7 @@ namespace MarkdownLocalize.Markdown
                     else
                     {
                         if (renderer.Options.ImageRelativePath != null)
-                            html = UpdateImageRelativePaths(renderer.Options.ImageRelativePath, html);
+                            html = UpdateImageRelativePaths(renderer.Options.ImageRelativePath, html, doc);
 
                         if (renderer.Options.KeepHTMLTagsTogetherEnabled())
                         {
@@ -179,11 +179,8 @@ namespace MarkdownLocalize.Markdown
 
             }
 
-            private string UpdateImageRelativePaths(string relativePath, string html)
+            private string UpdateImageRelativePaths(string relativePath, string html, IDocument doc)
             {
-                IDocument doc = GetDocument(html, out _);
-                string parsedHTML = doc.Body.InnerHtml;
-
                 int count = 0;
 
                 foreach (var node in doc.Body.Descendants())
