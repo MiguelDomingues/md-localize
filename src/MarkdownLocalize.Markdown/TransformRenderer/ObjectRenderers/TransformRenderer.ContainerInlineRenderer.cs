@@ -34,6 +34,8 @@ namespace MarkdownLocalize.Markdown
                 IEnumerable<Inline> skipChilds = obj.Where(c =>
                     c is AutolinkInline
                     || c is TaskList
+                    || c is LineBreakInline
+                    || c is HtmlInline
                     || (c is LiteralInline && ((LiteralInline)c).Content.ToString().Trim() == ""));
                 if (skipChilds.Count() == obj.Count())
                 {

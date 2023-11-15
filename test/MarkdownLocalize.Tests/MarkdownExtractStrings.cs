@@ -827,4 +827,65 @@ Another line
             "Text 2<br>\nAnother line"
             }, strings);
     }
+
+
+    [Fact]
+    public void EmptyAnchor()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "b", "br" },
+            EnableDefinitionLists = true,
+        });
+        string md = @"
+Definition 1
+:   Text line 1
+
+    Text line 2
+
+<a id=""service-actions-logs""></a>
+
+Definition 2
+:   Text line 3
+
+    Text line 4
+";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            "Definition 1",
+            "Text line 1",
+            "Text line 2",
+            "Definition 2",
+            "Text line 3",
+            "Text line 4",
+            }, strings);
+    }
+
+
+    [Fact]
+    public void SurroundBR()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            KeepLiteralsTogether = true,
+            EnableGitHubFlavoredMarkdownTaskLists = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "b", "br" },
+            EnableDefinitionLists = true,
+        });
+        string md = @"<span>
+Text<br/>
+Line
+</span>";
+
+        IEnumerable<string> strings = MarkdownParser.ExtractStrings(md, null).Select(si => si.String).Distinct();
+        Assert.Equal(new string[] {
+            @"Text<br>
+Line".ReplaceLineEndings(),
+            }, strings.Select(s => s.ReplaceLineEndings()));
+    }
 }
