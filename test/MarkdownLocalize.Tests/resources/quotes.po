@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 1987-05-13 20:45+0000\n"
+"Project-Id-Version: Markdown POT\n"
+"X-Generator: Markdown POT\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: pt-PT\n"
+
+msgctxt "Text"
+msgid "Hello \"Hey!\""
+msgstr "Hello &quot;Hey!&quot;"
+
+msgctxt "Text"
+msgid "Some `\"code\"`"
+msgstr "Some `&quot;code&quot;`"

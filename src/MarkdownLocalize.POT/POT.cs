@@ -3,6 +3,7 @@ using MarkdownLocalize.Markdown;
 using MarkdownLocalize.Utils;
 using static MarkdownLocalize.Markdown.TranslateRenderer;
 using System.Linq;
+using System.Web;
 
 namespace MarkdownLocalize;
 public class POT
@@ -148,7 +149,7 @@ public class POT
         return catalog;
     }
 
-    public static string Translate(POCatalog catalog, string markdown, string fileName, string pathToSource, bool keepSourceStrings, out TranslationInfo info)
+    public static string Translate(POCatalog catalog, string markdown, string fileName, string pathToSource, bool keepSourceStrings, IEnumerable<string> unescapeEntities, out TranslationInfo info)
     {
         string translatedMarkdown = MarkdownParser.Translate(markdown, (si) =>
         {
@@ -158,7 +159,20 @@ public class POT
             {
                 translation = si.String;
             }
-            return translation != null ? translation.Trim() : "";
+            if (translation != null)
+            {
+                if (unescapeEntities != null)
+                {
+                    foreach (string entity in unescapeEntities)
+                    {
+                        translation = translation.Replace(entity, HttpUtility.HtmlDecode(entity));
+                    }
+                }
+                translation = translation.Replace("&quot;", "\"");
+
+                return translation.Trim();
+            }
+            return "";
         }, fileName, pathToSource, catalog.Language, out info);
 
         return translatedMarkdown;

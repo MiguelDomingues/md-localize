@@ -113,6 +113,9 @@ namespace MarkdownLocalize.CLI
         [Option("--keep-html-together", "HTML tags to keep within text when extracting strings", CommandOptionType.MultipleValue)]
         public string[] KeepHTMLTagsTogether { get; } = Array.Empty<string>();
 
+        [Option("--unescape-entities", "HTML entities to be unescaped/decoded", CommandOptionType.MultipleValue)]
+        public string[] UnescapeEntities { get; } = Array.Empty<string>();
+
         private int OnExecute()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -213,7 +216,7 @@ namespace MarkdownLocalize.CLI
             }
             TranslationInfo info;
             string relativeToSource = PathUtils.GetRelativePath(outputMarkdown, inputMarkdown, true);
-            string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, KeepSourceStrings, out info);
+            string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, KeepSourceStrings, UnescapeEntities, out info);
             Log(string.Format(TRANSLATION_INFO, info.TranslatedCount, info.TotalCount));
             int ratio = info.TotalCount > 0 ? (int)(info.TranslatedCount * 1.0 / info.TotalCount * 100) : 0;
             if (ratio >= MinRatio)

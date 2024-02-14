@@ -27,7 +27,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO(poFile));
         TranslationInfo info;
-        string md = POT.Translate(catalog, originalMarkdown, null, null, false, out info);
+        string md = POT.Translate(catalog, originalMarkdown, null, null, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(translatedMarkdown, md);
         Assert.Equal(expectedTotalCount, info.TotalCount);
@@ -45,7 +45,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO(poFile));
         TranslationInfo info;
-        string md = POT.Translate(catalog, originalMarkdown, null, null, false, out info);
+        string md = POT.Translate(catalog, originalMarkdown, null, null, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(translatedMarkdown, md);
         Assert.Equal(expectedTotalCount, info.TotalCount);
@@ -57,7 +57,7 @@ public class TranslateMarkdown
     {
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
-        string md = POT.Translate(catalog, "# Heading\n\n##New Heading", null, null, true, out info);
+        string md = POT.Translate(catalog, "# Heading\n\n##New Heading", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal("# Título\n\n##New Heading", md);
         Assert.Equal(2, info.TotalCount);
@@ -74,7 +74,7 @@ public class TranslateMarkdown
 
     > Hello
     World
-", null, null, true, out info);
+", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"- Título
 
@@ -95,7 +95,7 @@ public class TranslateMarkdown
 
     > Hello
     > World
-", null, null, true, out info);
+", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"- Título
 
@@ -122,7 +122,7 @@ public class TranslateMarkdown
     World
 
 1. Heading
-", null, null, true, out info);
+", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"1. Título
 
@@ -148,7 +148,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
-        string md = POT.Translate(catalog, @"![Hello](image.png)", null, null, true, out info);
+        string md = POT.Translate(catalog, @"![Hello](image.png)", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"![Olá](image.png)", md);
 
@@ -177,7 +177,7 @@ Hello
 Hello
 World
 
-</p>", null, null, true, out info);
+</p>", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"# Título
 
@@ -214,7 +214,7 @@ Hello
 
 </div> 
 
-Hello", null, null, true, out info);
+Hello", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"# Título
 
@@ -271,7 +271,7 @@ Text 7
 <td>
 </td></tr>  
 </tbody>
-</table>", null, null, true, out info);
+</table>", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"<table>  
 <tbody>
@@ -319,11 +319,30 @@ Text 7
         });
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
-        string md = POT.Translate(catalog, @"<img src=""images/img.png"">", null, null, true, out info);
+        string md = POT.Translate(catalog, @"<img src=""images/img.png"">", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"<img src=""../../images/img.png"">".ReplaceLineEndings(), md.ReplaceLineEndings());
 
         Assert.Equal(0, info.TotalCount);
         Assert.Equal(0, info.TranslatedCount);
+    }
+
+    [Theory]
+    [InlineData("Hello \"Hey!\"")]
+    [InlineData("Some `\"code\"`")]
+    public void Quotes(string original)
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            ParseHtml = true,
+        });
+        var catalog = POT.Load(ReadPO("quotes.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, original, null, null, true, new string[] { "&quot;" }, out info);
+
+        Assert.Equal(original, md);
+
+        Assert.Equal(1, info.TotalCount);
+        Assert.Equal(1, info.TranslatedCount);
     }
 }
