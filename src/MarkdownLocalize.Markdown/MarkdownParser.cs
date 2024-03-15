@@ -53,10 +53,10 @@ public class MarkdownParser
             renderer.Render(document);
             tInfo = renderer.Info;
             string renderedMarkdown = writer.ToString();
-            if (Options.ImageRelativePath != null)
-                renderedMarkdown = UpdateRelativePaths(REGEX_IMAGE, renderedMarkdown, Options.ImageRelativePath);
             if (Options.LinkRelativePath != null)
                 renderedMarkdown = UpdateRelativePaths(REGEX_LINK, renderedMarkdown, Options.LinkRelativePath);
+            else if (Options.ImageRelativePath != null)
+                renderedMarkdown = UpdateRelativePaths(REGEX_IMAGE, renderedMarkdown, Options.ImageRelativePath);
 
             return renderedMarkdown;
         }
