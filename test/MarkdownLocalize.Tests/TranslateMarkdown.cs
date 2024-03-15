@@ -345,4 +345,27 @@ Text 7
         Assert.Equal(1, info.TotalCount);
         Assert.Equal(1, info.TranslatedCount);
     }
+
+
+    [Fact]
+    public void RelativePath()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            LinkRelativePath = "../",
+            ImageRelativePath = "../",
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"
+![](./image.png)
+
+[url](./file.md)", null, null, true, new string[] { "&quot;" }, out info);
+
+        Assert.Equal(@"
+![](../image.png)
+
+[url](../file.md)".ReplaceLineEndings(), md.ReplaceLineEndings());
+
+    }
 }
