@@ -348,24 +348,90 @@ Text 7
 
 
     [Fact]
-    public void RelativePath()
+    public void LinksRelativePath()
     {
         MarkdownParser.SetParserOptions(new RendererOptions()
         {
             LinkRelativePath = "../",
-            ImageRelativePath = "../",
         });
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
         string md = POT.Translate(catalog, @"
 ![](./image.png)
 
-[url](./file.md)", null, null, true, new string[] { "&quot;" }, out info);
+[url](./file.md)
+
+[\[url\]](./file.md)
+
+[http url](https://www.github.com)", null, null, true, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"
 ![](../image.png)
 
-[url](../file.md)".ReplaceLineEndings(), md.ReplaceLineEndings());
+[url](../file.md)
+
+[\[url\]](../file.md)
+
+[http url](https://www.github.com)".ReplaceLineEndings(), md.ReplaceLineEndings());
+
+    }
+
+    [Fact]
+    public void ImagesRelativePath()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            ImageRelativePath = "../images",
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"
+![](./image.png)
+
+[url](./file.md)
+
+[\[url\]](./file.md)
+
+[http url](https://www.github.com)", null, null, true, new string[] { "&quot;" }, out info);
+
+        Assert.Equal(@"
+![](../images/image.png)
+
+[url](./file.md)
+
+[\[url\]](./file.md)
+
+[http url](https://www.github.com)".ReplaceLineEndings(), md.ReplaceLineEndings());
+
+    }
+
+    [Fact]
+    public void AllRelativePath()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            LinkRelativePath = "../",
+            ImageRelativePath = "../images/",
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"
+![](./image.png)
+
+[url](./file.md)
+
+[\[url\]](./file.md)
+
+[http url](https://www.github.com)", null, null, true, new string[] { "&quot;" }, out info);
+
+        Assert.Equal(@"
+![](../image.png)
+
+[url](../file.md)
+
+[\[url\]](../file.md)
+
+[http url](https://www.github.com)".ReplaceLineEndings(), md.ReplaceLineEndings());
 
     }
 }

@@ -12,7 +12,7 @@ public class MarkdownParser
 
     public static RendererOptions Options = new RendererOptions();
     private static string REGEX_IMAGE = @"(!\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
-    private static string REGEX_LINK = @"([^!]?\[[^\]]*\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
+    private static string REGEX_LINK = @"(\[.*?(?=\]\()\]\()(.*?)\s*('(?:.*[^'])')?\s*(\))";
 
     public static void SetParserOptions(RendererOptions newOptions)
     {
