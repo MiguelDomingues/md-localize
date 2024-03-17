@@ -109,4 +109,39 @@ msgstr """"
 ";
         Assert.Equal(expected, finalPO);
     }
+
+    [Fact]
+    public void GeneratePOTMarkdownComments()
+    {
+        string markdown = @"# Heading
+        
+Some text with **bold**.
+";
+        IEnumerable<StringInfo> strings = Markdown.MarkdownParser.ExtractStrings(markdown, "./file.md");
+        string po = POT.Generate(strings, new string[] { ". This is markdown (extracted comment).", "Markdown content below." });
+        string expected = $@"msgid """"
+msgstr """"
+""POT-Creation-Date: 1987-05-13 20:45+0000\n""
+""Project-Id-Version: Markdown POT\n""
+""X-Generator: Markdown POT\n""
+""Content-Transfer-Encoding: 8bit\n""
+""Content-Type: text/plain; charset=UTF-8\n""
+""Language: en_US\n""
+
+#  Markdown content below.
+#. This is markdown (extracted comment).
+#: ./file.md:1
+msgctxt ""Heading (level 1)""
+msgid ""Heading""
+msgstr """"
+
+#  Markdown content below.
+#. This is markdown (extracted comment).
+#: ./file.md:3
+msgctxt ""Text""
+msgid ""Some text with **bold**.""
+msgstr """"
+";
+        Assert.Equal(expected, po);
+    }
 }

@@ -172,6 +172,7 @@ If you want to generate the translated Markdown only if all strings are translat
 Add extra comments to markdown strings only.
 Strings extracted from front-matter or HTML (when options enabled) do not get the comment added to the .pot entry.
 Only valid with `generate-pot` action.
+If the comment string starts with `.`, the comment is added as an extracted comment (see [PO File format](https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html)).
 
 ### --locale <STRING>, -l <STRING>
 

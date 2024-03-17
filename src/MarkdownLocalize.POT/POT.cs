@@ -69,11 +69,26 @@ public class POT
         {
             if (!translatorComments.Any(c => c.Text == tc))
             {
-                entry.Comments.Add(new POTranslatorComment()
+                POComment comment = GenerateComment(tc);
+                entry.Comments.Add(comment);
+            }
+        }
+    }
+
+    private static POComment GenerateComment(string tc)
+    {
+        switch (tc[0])
+        {
+            case '.':
+                return new POExtractedComment()
+                {
+                    Text = tc[1..].Trim(),
+                };
+            default:
+                return new POTranslatorComment()
                 {
                     Text = tc,
-                });
-            }
+                };
         }
     }
 
