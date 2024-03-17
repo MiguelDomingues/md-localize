@@ -233,3 +233,7 @@ To use this you must also enable HTML parsing with `--parse-html`.
 
 Unescape/decode HTML entities.
 When using `--unescape-entities &quot;` then the HTML entity `&quot;` will be replaced by `"` during the translation process, i.e., when generating the output markdown file.
+
+### --trim-translations
+
+Translations retrieved from PO files will be trimmed for whitespace.

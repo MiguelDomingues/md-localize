@@ -27,7 +27,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO(poFile));
         TranslationInfo info;
-        string md = POT.Translate(catalog, originalMarkdown, null, null, false, new string[] { "&quot;" }, out info);
+        string md = POT.Translate(catalog, originalMarkdown, null, null, false, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(translatedMarkdown, md);
         Assert.Equal(expectedTotalCount, info.TotalCount);
@@ -45,7 +45,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO(poFile));
         TranslationInfo info;
-        string md = POT.Translate(catalog, originalMarkdown, null, null, false, new string[] { "&quot;" }, out info);
+        string md = POT.Translate(catalog, originalMarkdown, null, null, false, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(translatedMarkdown, md);
         Assert.Equal(expectedTotalCount, info.TotalCount);
@@ -57,7 +57,7 @@ public class TranslateMarkdown
     {
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
-        string md = POT.Translate(catalog, "# Heading\n\n##New Heading", null, null, true, new string[] { "&quot;" }, out info);
+        string md = POT.Translate(catalog, "# Heading\n\n##New Heading", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal("# Título\n\n##New Heading", md);
         Assert.Equal(2, info.TotalCount);
@@ -74,7 +74,7 @@ public class TranslateMarkdown
 
     > Hello
     World
-", null, null, true, new string[] { "&quot;" }, out info);
+", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"- Título
 
@@ -95,7 +95,7 @@ public class TranslateMarkdown
 
     > Hello
     > World
-", null, null, true, new string[] { "&quot;" }, out info);
+", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"- Título
 
@@ -122,7 +122,7 @@ public class TranslateMarkdown
     World
 
 1. Heading
-", null, null, true, new string[] { "&quot;" }, out info);
+", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"1. Título
 
@@ -148,7 +148,7 @@ public class TranslateMarkdown
         });
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
-        string md = POT.Translate(catalog, @"![Hello](image.png)", null, null, true, new string[] { "&quot;" }, out info);
+        string md = POT.Translate(catalog, @"![Hello](image.png)", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"![Olá](image.png)", md);
 
@@ -177,7 +177,7 @@ Hello
 Hello
 World
 
-</p>", null, null, true, new string[] { "&quot;" }, out info);
+</p>", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"# Título
 
@@ -214,7 +214,7 @@ Hello
 
 </div> 
 
-Hello", null, null, true, new string[] { "&quot;" }, out info);
+Hello", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"# Título
 
@@ -271,7 +271,7 @@ Text 7
 <td>
 </td></tr>  
 </tbody>
-</table>", null, null, true, new string[] { "&quot;" }, out info);
+</table>", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"<table>  
 <tbody>
@@ -319,7 +319,7 @@ Text 7
         });
         var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
         TranslationInfo info;
-        string md = POT.Translate(catalog, @"<img src=""images/img.png"">", null, null, true, new string[] { "&quot;" }, out info);
+        string md = POT.Translate(catalog, @"<img src=""images/img.png"">", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"<img src=""../../images/img.png"">".ReplaceLineEndings(), md.ReplaceLineEndings());
 
@@ -338,7 +338,7 @@ Text 7
         });
         var catalog = POT.Load(ReadPO("quotes.po"));
         TranslationInfo info;
-        string md = POT.Translate(catalog, original, null, null, true, new string[] { "&quot;" }, out info);
+        string md = POT.Translate(catalog, original, null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(original, md);
 
@@ -363,7 +363,7 @@ Text 7
 
 [\[url\]](./file.md)
 
-[http url](https://www.github.com)", null, null, true, new string[] { "&quot;" }, out info);
+[http url](https://www.github.com)", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"
 ![](../image.png)
@@ -392,7 +392,7 @@ Text 7
 
 [\[url\]](./file.md)
 
-[http url](https://www.github.com)", null, null, true, new string[] { "&quot;" }, out info);
+[http url](https://www.github.com)", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"
 ![](../images/image.png)
@@ -422,7 +422,7 @@ Text 7
 
 [\[url\]](./file.md)
 
-[http url](https://www.github.com)", null, null, true, new string[] { "&quot;" }, out info);
+[http url](https://www.github.com)", null, null, true, false, new string[] { "&quot;" }, out info);
 
         Assert.Equal(@"
 ![](../image.png)

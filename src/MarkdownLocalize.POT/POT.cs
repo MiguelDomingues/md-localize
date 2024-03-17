@@ -149,12 +149,14 @@ public class POT
         return catalog;
     }
 
-    public static string Translate(POCatalog catalog, string markdown, string fileName, string pathToSource, bool keepSourceStrings, IEnumerable<string> unescapeEntities, out TranslationInfo info)
+    public static string Translate(POCatalog catalog, string markdown, string fileName, string pathToSource, bool keepSourceStrings, bool trimTranslation, IEnumerable<string> unescapeEntities, out TranslationInfo info)
     {
         string translatedMarkdown = MarkdownParser.Translate(markdown, (si) =>
         {
             var key = new POKey(NormalizeLineBreaks(si.String), null, si.Context);
             string translation = catalog.GetTranslation(key);
+            if (trimTranslation)
+                translation = translation.Trim();
             if (keepSourceStrings && (translation == null || translation == ""))
             {
                 translation = si.String;

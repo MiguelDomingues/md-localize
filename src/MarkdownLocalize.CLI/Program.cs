@@ -116,6 +116,10 @@ namespace MarkdownLocalize.CLI
         [Option("--unescape-entities", "HTML entities to be unescaped/decoded", CommandOptionType.MultipleValue)]
         public string[] UnescapeEntities { get; } = Array.Empty<string>();
 
+        [Option("--trim-translations", "Trim translations retrieved from PO file", CommandOptionType.NoValue)]
+        public bool TrimTranslations { get; } = false;
+
+
         private int OnExecute()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -216,7 +220,7 @@ namespace MarkdownLocalize.CLI
             }
             TranslationInfo info;
             string relativeToSource = PathUtils.GetRelativePath(outputMarkdown, inputMarkdown, true);
-            string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, KeepSourceStrings, UnescapeEntities, out info);
+            string translatedMarkdown = POT.Translate(catalog, md, inputMarkdown, relativeToSource, KeepSourceStrings, TrimTranslations, UnescapeEntities, out info);
             Log(string.Format(TRANSLATION_INFO, info.TranslatedCount, info.TotalCount));
             int ratio = info.TotalCount > 0 ? (int)(info.TranslatedCount * 1.0 / info.TotalCount * 100) : 0;
             if (ratio >= MinRatio)
