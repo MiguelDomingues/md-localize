@@ -170,7 +170,7 @@ public class POT
         {
             var key = new POKey(NormalizeLineBreaks(si.String), null, si.Context);
             string translation = catalog.GetTranslation(key);
-            if (trimTranslation)
+            if (translation != null && trimTranslation)
                 translation = translation.Trim();
             if (keepSourceStrings && (translation == null || translation == ""))
             {
