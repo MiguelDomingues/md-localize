@@ -434,4 +434,20 @@ Text 7
 [http url](https://www.github.com)".ReplaceLineEndings(), md.ReplaceLineEndings());
 
     }
+
+
+    [Fact]
+    public void AnchorLinksNoReplace()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            LinkRelativePath = "../",
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string md = POT.Translate(catalog, @"[url](#anchor)", null, null, true, false, new string[] { "&quot;" }, out info);
+
+        Assert.Equal(@"[url](#anchor)".ReplaceLineEndings(), md.ReplaceLineEndings());
+    }
+
 }
