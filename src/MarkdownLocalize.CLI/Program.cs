@@ -119,6 +119,9 @@ namespace MarkdownLocalize.CLI
         [Option("--trim-translations", "Trim translations retrieved from PO file", CommandOptionType.NoValue)]
         public bool TrimTranslations { get; } = false;
 
+        [Option("--use-br-inside-tables", "New lines are replaced by a <br/> tag when used inside tables.", CommandOptionType.NoValue)]
+        public bool UseBRInsideTables { get; } = false;
+
 
         private int OnExecute()
         {
@@ -297,6 +300,7 @@ namespace MarkdownLocalize.CLI
                 KeepLiteralsTogether = KeepLiteralsTogether,
                 EnableDefinitionLists = EnableDefinitionLists,
                 KeepHtmlTagsTogether = KeepHTMLTagsTogether,
+                ReplaceNewLineInsideTable = UseBRInsideTables,
             });
         }
 

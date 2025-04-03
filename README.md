@@ -238,3 +238,8 @@ When using `--unescape-entities &quot;` then the HTML entity `&quot;` will be re
 ### --trim-translations
 
 Translations retrieved from PO files will be trimmed for whitespace.
+
+### --use-br-inside-tables
+
+When translated strings contain new lines (e.g. `\n`), those will be replaced by a `<br />` when inside a table.
+To use this you must also use `--gfm-tables`.

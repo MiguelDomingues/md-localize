@@ -450,4 +450,31 @@ Text 7
         Assert.Equal(@"[url](#anchor)".ReplaceLineEndings(), md.ReplaceLineEndings());
     }
 
+
+    [Fact]
+    public void TableWithLineBreaks()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            LinkRelativePath = "../",
+            EnablePipeTables = true,
+            EnableCustomAttributes = true,
+            KeepLiteralsTogether = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "br", "b", "i", "sup", "code", "strong", "em", "a", "u", "ul", "li" },
+            ReplaceNewLineInsideTable = true,
+        });
+        var catalog = POT.Load(ReadPO("table.po"));
+        TranslationInfo info;
+        string markdown = @"**ColA** |  **ColB** | 
+---|---
+Value A|Value B<br/><br/>Second Line<br/><br/><ul><li>Item 1</li><li>Item 2.</li></ul> |";
+        string md = POT.Translate(catalog, markdown, null, null, true, true, new string[] { "&quot;" }, out info);
+
+        string expected = @"**JP-ColA** |  **JP-ColB** | 
+---|---
+JP Value A|JP Value B<br/><br/>JP Second Line<br/><br/><ul><li>JP Item 1</li><li>JP Item 2.</li></ul> |";
+
+        Assert.Equal(expected.ReplaceLineEndings(), md.ReplaceLineEndings());
+    }
 }

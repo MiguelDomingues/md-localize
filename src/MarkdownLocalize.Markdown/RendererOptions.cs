@@ -31,6 +31,7 @@ public class RendererOptions
     public Dictionary<string, string> AddFrontMatterKeys { get; set; }
     public bool KeepLiteralsTogether = false;
     public string[] KeepHtmlTagsTogether = new string[] { };
+    public bool ReplaceNewLineInsideTable = false;
 
 
     internal bool CheckKeepHTMLTagsTogether(IEnumerable<string> tags)

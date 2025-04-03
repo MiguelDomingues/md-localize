@@ -38,6 +38,8 @@ namespace MarkdownLocalize.Markdown
 
         protected abstract string Transform(string s, int index, bool isMarkdown);
 
+        private bool ForceReplaceNewLinesByHTML = false;
+
         private string CheckTransform(string s, int index, bool isMarkdown)
         {
             if (s.Trim().Length == 0)
@@ -143,6 +145,9 @@ namespace MarkdownLocalize.Markdown
 
             if (transformedS == null)
                 throw new Exception("Missing translation for: " + str);
+
+            if (ForceReplaceNewLinesByHTML)
+                transformedS = Regex.Replace(transformedS, @"\r\n?|\n", "<br />");
 
             MoveTo(startIndex);
 

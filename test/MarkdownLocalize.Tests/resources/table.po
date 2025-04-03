@@ -1,0 +1,24 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 1987-05-13 20:45+0000\n"
+"Project-Id-Version: Markdown POT\n"
+"X-Generator: Markdown POT\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+
+msgctxt "Text"
+msgid "ColA"
+msgstr "JP-ColA"
+
+msgctxt "Text"
+msgid "ColB"
+msgstr "JP-ColB"
+
+msgctxt "Text"
+msgid "Value A"
+msgstr "JP Value A"
+
+msgctxt "Text"
+msgid "Value B<br/><br/>Second Line<br/><br/><ul><li>Item 1</li><li>Item 2.</li></ul>"
+msgstr "JP Value B\n\nJP Second Line\n\n<ul><li>JP Item 1</li><li>JP Item 2.</li></ul>"
