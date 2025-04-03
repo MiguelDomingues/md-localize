@@ -473,7 +473,7 @@ Value A|Value B<br/><br/>Second Line<br/><br/><ul><li>Item 1</li><li>Item 2.</li
 
         string expected = @"**JP-ColA** |  **JP-ColB** | 
 ---|---
-JP Value A|JP Value B<br/><br/>JP Second Line<br/><br/><ul><li>JP Item 1</li><li>JP Item 2.</li></ul> |";
+JP Value A|JP Value B<br /><br />JP Second Line<br /><br /><ul><li>JP Item 1</li><li>JP Item 2.</li></ul> |";
 
         Assert.Equal(expected.ReplaceLineEndings(), md.ReplaceLineEndings());
     }
