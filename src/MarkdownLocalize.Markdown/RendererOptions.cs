@@ -32,6 +32,7 @@ public class RendererOptions
     public bool KeepLiteralsTogether = false;
     public string[] KeepHtmlTagsTogether = new string[] { };
     public bool ReplaceNewLineInsideTable = false;
+    public bool ReplaceNewLineInsideHeading = false;
 
 
     internal bool CheckKeepHTMLTagsTogether(IEnumerable<string> tags)
