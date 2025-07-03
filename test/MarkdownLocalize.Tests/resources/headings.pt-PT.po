@@ -36,3 +36,9 @@ msgstr "Olá"
 msgctxt "Text"
 msgid "Hello"
 msgstr "Olá"
+
+msgctxt "Heading (level 2)"
+msgid "Line<br>Second"
+msgstr "Linha  \nSegunda"
+
+
