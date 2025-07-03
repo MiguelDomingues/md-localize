@@ -477,4 +477,28 @@ JP Value A|JP Value B<br /><br />JP Second Line<br /><br /><ul><li>JP Item 1</li
 
         Assert.Equal(expected.ReplaceLineEndings(), md.ReplaceLineEndings());
     }
+
+
+    [Fact]
+    public void HeadingWithLineBreaks()
+    {
+        MarkdownParser.SetParserOptions(new RendererOptions()
+        {
+            LinkRelativePath = "../",
+            EnablePipeTables = true,
+            EnableCustomAttributes = true,
+            KeepLiteralsTogether = true,
+            ParseHtml = true,
+            KeepHtmlTagsTogether = new string[] { "br", "b", "i", "sup", "code", "strong", "em", "a", "u", "ul", "li" },
+            ReplaceNewLineInsideHeading = true,
+        });
+        var catalog = POT.Load(ReadPO("headings.pt-PT.po"));
+        TranslationInfo info;
+        string markdown = @"## Line<br>Second";
+        string md = POT.Translate(catalog, markdown, null, null, true, true, new string[] { "&quot;" }, out info);
+
+        string expected = @"## Linha  <br />Segunda";
+
+        Assert.Equal(expected.ReplaceLineEndings(), md.ReplaceLineEndings());
+    }
 }

@@ -122,6 +122,8 @@ namespace MarkdownLocalize.CLI
         [Option("--use-br-inside-tables", "New lines are replaced by a <br/> tag when used inside tables.", CommandOptionType.NoValue)]
         public bool UseBRInsideTables { get; } = false;
 
+        [Option("--use-br-inside-headings", "New lines are replaced by a <br/> tag when used inside headings.", CommandOptionType.NoValue)]
+        public bool UseBRInsideHeadings { get; } = false;
 
         private int OnExecute()
         {
@@ -301,6 +303,7 @@ namespace MarkdownLocalize.CLI
                 EnableDefinitionLists = EnableDefinitionLists,
                 KeepHtmlTagsTogether = KeepHTMLTagsTogether,
                 ReplaceNewLineInsideTable = UseBRInsideTables,
+                ReplaceNewLineInsideHeading = UseBRInsideHeadings,
             });
         }
 

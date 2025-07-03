@@ -118,6 +118,9 @@ namespace MarkdownLocalize.Markdown
             else
             {
                 var newMarkdown = CheckTransform(trimmedMarkdown, index + trimStartIndex, true);
+                if (ForceReplaceNewLinesByHTML)
+                    newMarkdown = Regex.Replace(newMarkdown, @"\r\n?|\n", "<br />");
+
                 Write(newMarkdown);    // Replaced markdown
             }
 
