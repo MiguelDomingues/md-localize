@@ -23,7 +23,7 @@ namespace MarkdownLocalize.CLI
         }
 
         [Option("--action|-a", "The action to perform.", CommandOptionType.SingleValue)]
-        [AllowedValues(ACTION_GENERATE_POT, ACTION_TRANSLATE, IgnoreCase = true)]
+        [McMaster.Extensions.CommandLineUtils.AllowedValues(ACTION_GENERATE_POT, ACTION_TRANSLATE, IgnoreCase = true)]
         public string Action { get; }
 
         [Option("--input|-i", "Input file/directory.", CommandOptionType.SingleValue)]

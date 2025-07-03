@@ -17,7 +17,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.x
 
     - name: Restore dependencies
       run: dotnet restore
@@ -31,8 +31,8 @@ jobs:
     - name: Publish
       run: |
         mkdir publish
-        dotnet publish --no-restore -c Release -o ./publish/windows -r win10-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
-        dotnet publish --no-restore -c Release -o ./publish/osx -r osx.10.11-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
+        dotnet publish --no-restore -c Release -o ./publish/windows -r win-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
+        dotnet publish --no-restore -c Release -o ./publish/osx -r osx-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
         dotnet publish --no-restore -c Release -o ./publish/linux -r linux-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
         mv publish/windows/MarkdownLocalize.CLI.exe publish/md-localize-windows.exe
         mv publish/osx/MarkdownLocalize.CLI publish/md-localize-osx
