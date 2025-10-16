@@ -5,8 +5,8 @@ namespace MarkdownLocalize.Tests;
 [Collection("Text Translation")]
 public class TranslateText
 {
-    private const string MODEL_FILE = "gemma-3-4b-it-q4_0.gguf";
-    private const string MODEL_URL = "https://huggingface.co/libretranslate/gemma3/resolve/main/gemma-3-4b-it-q4_0.gguf";
+    private const string MODEL_FILE = "Meta-Llama-3.1-8B-Instruct-128k-Q4_0.gguf";
+    private const string MODEL_URL = "https://huggingface.co/GPT4All-Community/Meta-Llama-3.1-8B-Instruct-128k-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-128k-Q4_0.gguf";
 
     private static string GetModelFile()
     {
