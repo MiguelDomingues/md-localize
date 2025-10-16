@@ -18,6 +18,9 @@ public class Translator : IDisposable
 
     public Translator(string modelPath, string targetLanguage)
     {
+        LLama.Native.NativeLibraryConfig.LLama.WithCuda(false);
+        LLama.Native.NativeLibraryConfig.LLama.WithVulkan(false);
+        LLama.Native.NativeLibraryConfig.LLama.WithAutoFallback(true);
         var parameters = new ModelParams(modelPath)
         {
             GpuLayerCount = 10
