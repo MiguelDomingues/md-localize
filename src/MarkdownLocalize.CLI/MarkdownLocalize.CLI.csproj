@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <LlamaSharpBackendCpu Include="$(NuGetPackageRoot)\llamasharp.backend.cpu\0.24.0\runtimes\$(RuntimeIdentifier)\**\*.*" />
+    <LlamaSharpBackendCpu Include="$(NuGetPackageRoot)\llamasharp.backend.cpu\0.24.0\runtimes\**\*.*" />
   </ItemGroup>
 
   <Target Name="CopyRuntimesFolderOnPublish" AfterTargets="Publish">
@@ -41,6 +41,6 @@
     <Delete Files="$(PublishDir)ggml-cpu.dll" />
     <Delete Files="$(PublishDir)ggml-vulkan.dll" />
     <Delete Files="$(PublishDir)ggml-cuda.dll" />
-    <Copy SourceFiles="@(LlamaSharpBackendCpu)" DestinationFolder="$(PublishDir)\runtimes\$(RuntimeIdentifier)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(LlamaSharpBackendCpu)" DestinationFolder="$(PublishDir)\runtimes\%(RecursiveDir)" />
   </Target>
 </Project>
