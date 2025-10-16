@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
+    <PackageReference Include="LLamaSharp" Version="0.24.0" />
+    <PackageReference Include="LLamaSharp.Backend.Cpu" Version="0.24.0" GeneratePathProperty="true"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -23,4 +25,22 @@
     <ProjectReference Include="..\MarkdownLocalize.Translate\MarkdownLocalize.Translate.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <LlamaSharpBackendCpu Include="$(NuGetPackageRoot)\llamasharp.backend.cpu\0.24.0\runtimes\$(RuntimeIdentifier)\**\*.*" />
+  </ItemGroup>
+
+  <Target Name="CopyRuntimesFolderOnPublish" AfterTargets="Publish">
+    <Delete Files="$(PublishDir)llama.dll" />
+    <Delete Files="$(PublishDir)llava_shared.dll" />
+    <Delete Files="$(PublishDir)ggml.dll" />
+    <Delete Files="$(PublishDir)ggml-base.dll" />
+    <Delete Files="$(PublishDir)ggml-cpu.dll" />
+    <Delete Files="$(PublishDir)ggml-vulkan.dll" />
+    <Delete Files="$(PublishDir)ggml-cuda.dll" />
+    <Copy SourceFiles="@(LlamaSharpBackendCpu)" DestinationFolder="$(PublishDir)\runtimes\$(RuntimeIdentifier)\%(RecursiveDir)" />
+  </Target>
 </Project>
