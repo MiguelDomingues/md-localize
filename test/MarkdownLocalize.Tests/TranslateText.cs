@@ -23,7 +23,7 @@ public class TranslateText
         return MODEL_FILE;
     }
 
-    [Fact]
+    [Fact(Skip = "Long running test, only run manually")]
     public static void Hello()
     {
         string modelPath = GetModelFile();
@@ -33,7 +33,7 @@ public class TranslateText
         Assert.Equal("Olá, mundo!", translated);
     }
 
-    [Fact]
+    [Fact(Skip = "Long running test, only run manually")]
     public static void MultipleText()
     {
         string modelPath = GetModelFile();
@@ -48,7 +48,7 @@ public class TranslateText
     }
 
 
-    [Fact]
+    [Fact(Skip = "Long running test, only run manually")]
     public static void MarkdownText()
     {
         string modelPath = GetModelFile();
@@ -59,7 +59,7 @@ public class TranslateText
         Assert.Equal("O **sol** está a brilhar.", translated);
     }
 
-    [Fact]
+    [Fact(Skip = "Long running test, only run manually")]
     public static void QuickFox()
     {
         string modelPath = GetModelFile();
