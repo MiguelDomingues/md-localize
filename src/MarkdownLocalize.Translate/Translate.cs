@@ -3,84 +3,104 @@ using System.Threading.Tasks;
 using LLama;
 using LLama.Common;
 using LLama.Sampling;
+using LLama.Transformers;
 
 namespace MarkdownLocalize;
 
 public class Translator : IDisposable
 {
-    private const string INSTRUCTION_PREFIX = "\n\n### Instruction:\n\n";
-
     private readonly LLamaWeights Model;
     private readonly LLamaContext Context;
     private readonly StatefulExecutorBase Executor;
     private readonly InferenceParams InferenceParams;
+    private readonly ChatSession Session;
+    private const string PUNCTUATION_CHARS = ".?!";
 
     public Translator(string modelPath, string targetLanguage)
     {
         var parameters = new ModelParams(modelPath)
         {
-            ContextSize = 2048,
-            GpuLayerCount = 32,
-            UseMemoryLock = false,
-            UseMemorymap = true,
-            BatchSize = 2048,
-            Threads = 4,
-
+            GpuLayerCount = 10
         };
         Model = LLamaWeights.LoadFromFile(parameters);
-        Context = Model.CreateContext(parameters);
 
-        var sysPrompt = "Translate the given text from English to " + targetLanguage + ". "
+        Context = Model.CreateContext(parameters);
+        Executor = new InteractiveExecutor(Context);
+        /*var sysPrompt = "Translate the given text from English to " + targetLanguage + ". "
                  + "Do not reply with any additional text or symbols, notes or explanations. "
                  + "The output must contain only the translated text, and include the same formatting in Markdown as the original text. "
                  + "Be faithful or accurate in translation. "
                  + "Make the translation readable or intelligible. "
                  + "Be elegant or natural in translation. "
                  + "If the text cannot be translated, return the original text as is. "
-                 + "Do not translate person's name.";
-        Executor = new InstructExecutor(Context, instructionPrefix: INSTRUCTION_PREFIX);
+                 + "Do not translate person's name.";*/
+        //var sysPrompt = "You are an expert linguist, specializing in translation. You are able to capture the nuances of the languages you translate. You pay attention to masculine/feminine/plural and proper use of articles and grammar. You always provide natural sounding translations that fully preserve the meaning of the original text. You never provide explanations for your work. You always answer with the translated text and nothing else. The translated text captures the same Markdown styling as the source text. If the source text contains Markdown formatting, apply the same to the translated text.";
+        var sysPrompt = $"You are a translator. Translate the given text from English to {targetLanguage}. Be faithful or accurate in translation. Make the translation readable or intelligible. Be elegant or natural in translation. Keeping the same punctuation in the translation, if no period (or similar) is at the end of the input, do not add it. If the text cannot be translated, return the original text as is. Do not translate person's name, and do not add any additional text in the translation. Also, be attentive to any terms that are capitalized, avoid translating these.";
+
+        var chatHistory = new ChatHistory();
+        chatHistory.AddMessage(AuthorRole.System, sysPrompt);
+
+        Session = new(Executor, chatHistory);
+
+        Session.WithHistoryTransform(new PromptTemplateTransformer(Model, withAssistant: true));
+
+        Session.WithOutputTransform(new LLamaTransforms.KeywordTextOutputStreamTransform(
+                    ["User:", "�"],
+                    redundancyLength: 5));
 
         InferenceParams = new InferenceParams
         {
-            SamplingPipeline = new DefaultSamplingPipeline()
+            SamplingPipeline = new DefaultSamplingPipeline
             {
-                Temperature = 0.0f,
-                TopK = 50,
-                TopP = 0.95f,
-                MinP = 0.05f,
-                TypicalP = 1.0f,
-                RepeatPenalty = 1.1f
-
+                Temperature = 0.6f
             },
+
+            MaxTokens = -1, // keep generating tokens until the anti prompt is encountered
+            AntiPrompts = ["User:"] // model specific end of turn string (or default)
         };
 
-        var _ = Prompt(sysPrompt, true).Result;
     }
 
-    public string TranslateText(string text)
+    public string? TranslateText(string text)
     {
-        return Prompt(text, false).Result;
+        string translated = Prompt(text).Result;
+        if (string.IsNullOrEmpty(translated) || text.Trim() == translated.Trim())
+            return null;
+
+        // Check and fix ending punctuation
+        if (!PUNCTUATION_CHARS.Contains(text[^1]) && PUNCTUATION_CHARS.Contains(translated[^1]))
+            translated = translated[..^1];
+
+        return translated;
     }
 
-    private async Task<string> Prompt(string prompt, bool ignoreOutput)
+    private async Task<string> Prompt(string prompt)
     {
         string result = "";
         CancellationTokenSource cts = new CancellationTokenSource();
-        await foreach (var text in Executor.InferAsync(prompt, InferenceParams, cts.Token))
+        int noTextCount = 0;
+        await foreach (
+            var text
+            in Session.ChatAsync(
+                new ChatHistory.Message(AuthorRole.User, prompt),
+                InferenceParams, cts.Token))
         {
-            if (ignoreOutput | result.Contains("\n\n### "))
-            {
-                cts.Cancel();
-                if (ignoreOutput)
-                    return "";
-                break;
-            }
+
+            if (string.IsNullOrWhiteSpace(text))
+                noTextCount++;
+            else
+                noTextCount = 0;
 
             result += text;
+
+            if (noTextCount > 50)
+            {
+                cts.Cancel();
+                break;
+            }
         }
-        int index = result.IndexOf("\n\n### ");
-        result = result.Substring(0, index).Trim();
-        return result;
+
+        return result.Trim();
     }
 
     public void Dispose()

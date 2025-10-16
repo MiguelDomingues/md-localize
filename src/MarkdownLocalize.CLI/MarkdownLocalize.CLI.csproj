@@ -20,6 +20,7 @@
     <ProjectReference Include="..\MarkdownLocalize.Utils\MarkdownLocalize.Utils.csproj" />
     <ProjectReference Include="..\MarkdownLocalize.POT\MarkdownLocalize.POT.csproj" />
     <ProjectReference Include="..\MarkdownLocalize.Markdown\MarkdownLocalize.Markdown.csproj" />
+    <ProjectReference Include="..\MarkdownLocalize.Translate\MarkdownLocalize.Translate.csproj" />
   </ItemGroup>
 
 </Project>

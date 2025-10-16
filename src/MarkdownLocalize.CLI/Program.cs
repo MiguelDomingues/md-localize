@@ -15,6 +15,7 @@ namespace MarkdownLocalize.CLI
     {
         private const string ACTION_GENERATE_POT = "generate-pot";
         private const string ACTION_TRANSLATE = "translate";
+        private const string ACTION_PO_TRANSLATE = "po-translate";
         public const string TRANSLATION_INFO = "Translated {0} out of {1} strings.";
 
         public static int Main(string[] args)
@@ -23,7 +24,7 @@ namespace MarkdownLocalize.CLI
         }
 
         [Option("--action|-a", "The action to perform.", CommandOptionType.SingleValue)]
-        [McMaster.Extensions.CommandLineUtils.AllowedValues(ACTION_GENERATE_POT, ACTION_TRANSLATE, IgnoreCase = true)]
+        [McMaster.Extensions.CommandLineUtils.AllowedValues(ACTION_GENERATE_POT, ACTION_TRANSLATE, ACTION_PO_TRANSLATE, IgnoreCase = true)]
         public string Action { get; }
 
         [Option("--input|-i", "Input file/directory.", CommandOptionType.SingleValue)]
@@ -40,7 +41,7 @@ namespace MarkdownLocalize.CLI
         [Option("--po-dir|-pod", "The directory to create the .po/.pot files. Directory structure is kept.", CommandOptionType.SingleValue)]
         public string POTDirectory { get; }
 
-        [Option("--locale|-l", "Locale.", CommandOptionType.SingleValue)]
+        [Option("--locale|-l", "The locale to translate to using AI model. Examples: pt_PT; pt_BR; es_MX", CommandOptionType.SingleValue)]
         public string Locale { get; }
 
         [Option("--gfm-task-lists", "Enable GitHub Flavored Markdown task lists.", CommandOptionType.NoValue)]
@@ -125,6 +126,11 @@ namespace MarkdownLocalize.CLI
         [Option("--use-br-inside-headings", "New lines are replaced by a <br/> tag when used inside headings.", CommandOptionType.NoValue)]
         public bool UseBRInsideHeadings { get; } = false;
 
+        [Option("--gguf-model", "Path to .gguf model", CommandOptionType.SingleValue)]
+        [FileOrDirectoryExists]
+        public string GGUF_MODEL_PATH { get; } = null;
+
+
         private int OnExecute()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -135,6 +141,7 @@ namespace MarkdownLocalize.CLI
             }
             else
                 DoFile(Input, Output, this.POTFile);
+
             return 0;
         }
 
@@ -145,9 +152,11 @@ namespace MarkdownLocalize.CLI
             {
                 string filename = Path.GetFileName(f);
                 string outputFile = Path.Combine(output, filename);
+                if (this.Action == ACTION_PO_TRANSLATE)
+                    outputFile = Path.ChangeExtension(outputFile, ".po");
                 if ((this.POTFile == "" || this.POTFile == null) && poDirectory != null)
                 {
-                    string extension = this.Action == ACTION_GENERATE_POT ? ".pot" : ".po";
+                    string extension = this.Action == ACTION_GENERATE_POT || this.Action == ACTION_PO_TRANSLATE ? ".pot" : ".po";
                     string poFile = Path.Combine(poDirectory, Path.ChangeExtension(filename, extension));
                     DoFile(f, outputFile, poFile);
                 }
@@ -191,6 +200,18 @@ namespace MarkdownLocalize.CLI
                 case ACTION_GENERATE_POT:
                     Log($"Generating .pot from {Path.GetRelativePath(Directory.GetCurrentDirectory(), input)}...");
                     GeneratePOT(input, poFile);
+                    break;
+                case ACTION_PO_TRANSLATE:
+                    if (File.Exists(poFile) || IgnoreMissingPO)
+                    {
+                        Log($"Translating {poFile} to {Locale}...");
+                        AITranslate(poFile, output, Locale);
+                    }
+                    else
+                    {
+                        string relativePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), poFile);
+                        Log("Missing " + relativePath + " file. Skipping...");
+                    }
                     break;
                 case ACTION_TRANSLATE:
                     if (File.Exists(poFile) || IgnoreMissingPO)
@@ -269,6 +290,61 @@ namespace MarkdownLocalize.CLI
                 if (catalog.Count > 0)
                     WriteToOutput(newPOT, outputPOT);
             }
+        }
+
+        private void AITranslate(string poFile, string outputFile, string targetLanguage)
+        {
+            string pot = File.ReadAllText(poFile);
+            var existingCatalog = File.Exists(outputFile) ? POT.Load(File.ReadAllText(outputFile)) : null;
+            var catalog = POT.Load(pot);
+            Translator ModelTranslator = null;
+
+            foreach (var entry in catalog)
+            {
+                switch (entry)
+                {
+                    case POSingularEntry singularEntry:
+                        if (string.IsNullOrEmpty(singularEntry.Translation))
+                        {
+                            if (existingCatalog != null)
+                            {
+                                var existingTranslation = existingCatalog.GetTranslation(entry.Key);
+                                if (!string.IsNullOrEmpty(existingTranslation.Trim()))
+                                {
+                                    singularEntry.Translation = existingTranslation;
+                                    continue;
+                                }
+                            }
+
+                            if (ModelTranslator == null)
+                            {
+                                Log($"Initializing translation ({targetLanguage}) session...");
+                                ModelTranslator = new Translator(GGUF_MODEL_PATH, targetLanguage);
+                            }
+                            string translatedText = ModelTranslator.TranslateText(singularEntry.Key.Id);
+                            if (translatedText != null)
+                            {
+                                singularEntry.Translation = translatedText;
+                                Log($"Translation [{targetLanguage}]: {singularEntry.Key.Id} >>> {singularEntry.Translation}");
+                            }
+                            else
+                            {
+                                Log($"Warning: Could not translate string: {singularEntry.Key.Id}");
+                            }
+                        }
+                        break;
+                    default:
+                        Log("Unsupported PO entry type: " + entry.GetType().Name);
+                        break;
+                }
+            }
+            catalog.Language = targetLanguage;
+
+            string newPOT = POT.Write(catalog);
+            WriteToOutput(newPOT, outputFile);
+
+            if (ModelTranslator != null)
+                ModelTranslator.Dispose();
         }
 
         private void UpdateRelativePaths(string input, string output)
