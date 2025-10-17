@@ -1,7 +1,6 @@
-﻿
-using System.Threading.Tasks;
-using LLama;
+﻿using LLama;
 using LLama.Common;
+using LLama.Native;
 using LLama.Sampling;
 using LLama.Transformers;
 
@@ -18,9 +17,11 @@ public class Translator : IDisposable
 
     public Translator(string modelPath, string targetLanguage)
     {
-        LLama.Native.NativeLibraryConfig.LLama.WithCuda(false);
-        LLama.Native.NativeLibraryConfig.LLama.WithVulkan(false);
-        LLama.Native.NativeLibraryConfig.LLama.WithAutoFallback(true);
+        NativeLibraryConfig
+            .All
+            .WithVulkan()
+            .WithAutoFallback();
+
         var parameters = new ModelParams(modelPath)
         {
             GpuLayerCount = 10

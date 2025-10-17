@@ -26,21 +26,49 @@ jobs:
       - name: Test
         run: dotnet test --no-build --verbosity normal
         
-      - name: Publish
+      - name: Publish Windows
         run: |
           mkdir publish
           dotnet publish --no-restore -c Release -o ./publish/windows -r win-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
-          dotnet publish --no-restore -c Release -o ./publish/osx -r osx-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
-          dotnet publish --no-restore -c Release -o ./publish/linux -r linux-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
           mv publish/windows/MarkdownLocalize.CLI.exe publish/md-localize-windows.exe
-          mv publish/osx/MarkdownLocalize.CLI publish/md-localize-osx
-          mv publish/linux/MarkdownLocalize.CLI publish/md-localize-linux
+          mv publish/windows/MarkdownLocalize.CLI.exe publish/windows/md-localize-windows.exe
+          rm -Rvf publish/windows/*.pdb
+          rm -Rvf publish/windows/runtimes/linux*
+          rm -Rvf publish/windows/runtimes/osx*
+          cd publish/windows/
+          zip -r ../md-localize-windows.zip **
+          cd ..
+          cd ..
+
+      - name: Publish OSX
+        run: |
+          dotnet publish --no-restore -c Release -o ./publish/osx -r osx-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
+          mv publish/osx/MarkdownLocalize.CLI publish/osx/md-localize-osx
+          rm -Rvf publish/osx/*.pdb
+          rm -Rvf publish/osx/runtimes/linux*
+          rm -Rvf publish/osx/runtimes/win*
+          cd publish/osx/
+          zip -r ../md-localize-osx.zip **
+          cd ..
+          cd ..
+
+      - name: Publish Linux
+        run: |
+          dotnet publish --no-restore -c Release -o ./publish/linux -r linux-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
+          mv publish/linux/MarkdownLocalize.CLI publish/linux/md-localize
+          rm -Rvf publish/linux/*.pdb
+          rm -Rvf publish/linux/runtimes/osx*
+          rm -Rvf publish/linux/runtimes/win*
+          cd publish/linux/
+          zip -r ../md-localize-linux.zip **
+          cd ..
+          cd ..
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
-            publish/md-localize-linux
-            publish/md-localize-osx
-            publish/md-localize-windows.exe
+            publish/md-localize-linux.zip
+            publish/md-localize-osx.zip
+            publish/md-localize-windows.zip
