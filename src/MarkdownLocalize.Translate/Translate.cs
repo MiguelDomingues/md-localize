@@ -17,10 +17,22 @@ public class Translator : IDisposable
 
     public Translator(string modelPath, string targetLanguage)
     {
+        var showLLamaCppLogs = true;
+        NativeLibraryConfig
+           .All
+           .WithLogCallback((level, message) =>
+           {
+               if (showLLamaCppLogs)
+                   Console.WriteLine($"[llama {level}]: {message.TrimEnd('\n')}");
+           });
         NativeLibraryConfig
             .All
             .WithVulkan()
             .WithAutoFallback();
+
+        // Calling this method forces loading to occur now.
+        NativeApi.llama_empty_call();
+        showLLamaCppLogs = false;
 
         var parameters = new ModelParams(modelPath)
         {
