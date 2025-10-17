@@ -30,7 +30,6 @@ jobs:
         run: |
           mkdir publish
           dotnet publish --no-restore -c Release -o ./publish/windows -r win-x64 --self-contained /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:PublishReadyToRun=false /p:PublishTrimmed=false src/MarkdownLocalize.CLI
-          mv publish/windows/MarkdownLocalize.CLI.exe publish/md-localize-windows.exe
           mv publish/windows/MarkdownLocalize.CLI.exe publish/windows/md-localize-windows.exe
           rm -Rvf publish/windows/*.pdb
           rm -Rvf publish/windows/runtimes/linux*
