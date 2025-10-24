@@ -247,3 +247,8 @@ To use this you must also use `--gfm-tables`.
 ### --use-br-inside-headings
 
 When translated strings contain new lines (e.g. `\n`), those will be replaced by a `<br />` when inside a heading.
+
+### --max-files N
+
+Limit the number of files to process.
+Default is unlimited.

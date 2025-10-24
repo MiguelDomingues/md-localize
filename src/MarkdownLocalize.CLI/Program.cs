@@ -130,11 +130,16 @@ namespace MarkdownLocalize.CLI
         [FileOrDirectoryExists]
         public string GGUF_MODEL_PATH { get; } = null;
 
+        [Option("--max-files", "Maximum number of files to process (default unlimited)", CommandOptionType.SingleValue)]
+        public int MaxFiles { get; } = -1;
+
+        private int RemainingFiles = -1;
 
         private int OnExecute()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             InitMarkdownParserOptions();
+            RemainingFiles = MaxFiles;
             if (File.GetAttributes(Input).HasFlag(FileAttributes.Directory))
             {
                 DoDirectory(Input, Output, this.POTDirectory);
@@ -147,6 +152,11 @@ namespace MarkdownLocalize.CLI
 
         private void DoDirectory(string input, string output, string poDirectory)
         {
+            if (RemainingFiles == 0)
+            {
+                Console.WriteLine("Reached maximum number of files to process.");
+                return;
+            }
             string searchPattern = "*.md";
             foreach (string f in Directory.GetFiles(input, searchPattern))
             {
@@ -176,6 +186,11 @@ namespace MarkdownLocalize.CLI
 
         private void DoFile(string input, string output, string poFile)
         {
+            if (RemainingFiles == 0)
+            {
+                Console.WriteLine("Reached maximum number of files to process.");
+                return;
+            }
             if (!String.IsNullOrEmpty(FileSuffix))
             {
                 if (this.Action != ACTION_TRANSLATE)
@@ -410,6 +425,8 @@ namespace MarkdownLocalize.CLI
                     Directory.CreateDirectory(path);
                 Log($"Writing to {outputFile}...");
                 File.WriteAllText(outputFile, pot);
+                if (RemainingFiles > 0)
+                    RemainingFiles--;
             }
         }
     }
