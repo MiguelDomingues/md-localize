@@ -423,9 +423,10 @@ namespace MarkdownLocalize.CLI
                 string path = Path.GetDirectoryName(outputFile);
                 if (path != "")
                     Directory.CreateDirectory(path);
+                string before = File.Exists(outputFile) ? File.ReadAllText(outputFile) : "";
                 Log($"Writing to {outputFile}...");
                 File.WriteAllText(outputFile, pot);
-                if (RemainingFiles > 0)
+                if (RemainingFiles > 0 && before != pot)
                     RemainingFiles--;
             }
         }
