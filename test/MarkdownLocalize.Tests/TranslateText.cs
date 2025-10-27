@@ -27,8 +27,8 @@ public class TranslateText
     public static void Hello()
     {
         string modelPath = GetModelFile();
-        using Translator t = new(modelPath, "pt_PT");
-        string? translated = t.TranslateText("Hello, world!");
+        using Translator t = new(modelPath, "pt_PT", Translator.DEFAULT_PROMPT);
+        string? translated = t.TranslateText("Hello, world!", out _);
         Assert.NotNull(translated);
         Assert.Equal("Olá, mundo!", translated);
     }
@@ -37,12 +37,12 @@ public class TranslateText
     public static void MultipleText()
     {
         string modelPath = GetModelFile();
-        using Translator t = new(modelPath, "pt_PT");
-        string? translated = t.TranslateText("Hello, world!");
+        using Translator t = new(modelPath, "pt_PT", Translator.DEFAULT_PROMPT);
+        string? translated = t.TranslateText("Hello, world!", out _);
         Assert.NotNull(translated);
         Assert.Equal("Olá, mundo!", translated);
 
-        translated = t.TranslateText("Today the sun is shining.");
+        translated = t.TranslateText("Today the sun is shining.", out _);
         Assert.NotNull(translated);
         Assert.Equal("Hoje o sol está a brilhar.", translated);
     }
@@ -52,9 +52,9 @@ public class TranslateText
     public static void MarkdownText()
     {
         string modelPath = GetModelFile();
-        using Translator t = new(modelPath, "pt_PT");
+        using Translator t = new(modelPath, "pt_PT", Translator.DEFAULT_PROMPT);
 
-        string? translated = t.TranslateText("The **sun** is shining.");
+        string? translated = t.TranslateText("The **sun** is shining.", out _);
         Assert.NotNull(translated);
         Assert.Equal("O **sol** está a brilhar.", translated);
     }
@@ -63,8 +63,8 @@ public class TranslateText
     public static void QuickFox()
     {
         string modelPath = GetModelFile();
-        using Translator t = new(modelPath, "pt_BR");
-        string? translated = t.TranslateText("The quick brown fox jumps over the lazy dog.");
+        using Translator t = new(modelPath, "pt_BR", Translator.DEFAULT_PROMPT);
+        string? translated = t.TranslateText("The quick brown fox jumps over the lazy dog.", out _);
         Assert.NotNull(translated);
         Assert.Equal("A raposa marrom rápida pula sobre o cão preguiçoso.", translated);
     }

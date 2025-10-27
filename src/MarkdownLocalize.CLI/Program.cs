@@ -133,6 +133,10 @@ namespace MarkdownLocalize.CLI
         [Option("--max-files", "Maximum number of files to process (default unlimited)", CommandOptionType.SingleValue)]
         public int MaxFiles { get; } = -1;
 
+        [Option("--prompt-file", "Path to prompt file", CommandOptionType.SingleValue)]
+        [FileOrDirectoryExists]
+        public string PromptFile { get; } = null;
+
         private int RemainingFiles = -1;
 
         private int OnExecute()
@@ -334,17 +338,19 @@ namespace MarkdownLocalize.CLI
                             if (ModelTranslator == null)
                             {
                                 Log($"Initializing translation ({targetLanguage}) session...");
-                                ModelTranslator = new Translator(GGUF_MODEL_PATH, targetLanguage);
+                                ModelTranslator = new Translator(GGUF_MODEL_PATH, targetLanguage, GetPrompt());
                             }
-                            string translatedText = ModelTranslator.TranslateText(singularEntry.Key.Id);
-                            if (translatedText != null)
+                            string translatedText = ModelTranslator.TranslateText(singularEntry.Key.Id, out string failureReason);
+                            if (failureReason == null)
                             {
                                 singularEntry.Translation = translatedText;
+                                POT.UpdateTranslatedOnComment(singularEntry);
                                 Log($"Translation [{targetLanguage}]: {singularEntry.Key.Id} >>> {singularEntry.Translation}");
                             }
                             else
                             {
                                 Log($"Warning: Could not translate string: {singularEntry.Key.Id}");
+                                Log($"Reason: {failureReason}");
                             }
                         }
                         break;
@@ -360,6 +366,13 @@ namespace MarkdownLocalize.CLI
 
             if (ModelTranslator != null)
                 ModelTranslator.Dispose();
+        }
+
+        private string GetPrompt()
+        {
+            if (PromptFile != null)
+                return File.ReadAllText(PromptFile);
+            return Translator.DEFAULT_PROMPT;
         }
 
         private void UpdateRelativePaths(string input, string output)

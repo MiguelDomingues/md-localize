@@ -1,13 +1,12 @@
 ﻿using Karambolo.PO;
 using MarkdownLocalize.Markdown;
-using MarkdownLocalize.Utils;
 using static MarkdownLocalize.Markdown.TranslateRenderer;
-using System.Linq;
 using System.Web;
 
 namespace MarkdownLocalize;
 public class POT
 {
+    private static readonly string TRANSLATED_ON = "Translated on: ";
 
     public static string Append(POCatalog catalog, IEnumerable<StringInfo> strings, string[] extraTranslatorComments)
     {
@@ -73,6 +72,21 @@ public class POT
                 entry.Comments.Add(comment);
             }
         }
+    }
+
+    public static void UpdateTranslatedOnComment(IPOEntry entry)
+    {
+        if (entry.Comments == null)
+            entry.Comments = new List<POComment>();
+
+        IEnumerable<POTranslatorComment> translatorComments = entry.Comments.Where(c => c is POTranslatorComment).Cast<POTranslatorComment>();
+
+        if (!translatorComments.Any(c => c.Text.StartsWith(TRANSLATED_ON)))
+        {
+            POComment comment = GenerateComment(TRANSLATED_ON + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC");
+            entry.Comments.Add(comment);
+        }
+
     }
 
     private static POComment GenerateComment(string tc)

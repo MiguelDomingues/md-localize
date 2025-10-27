@@ -252,3 +252,9 @@ When translated strings contain new lines (e.g. `\n`), those will be replaced by
 
 Limit the number of files to process.
 Default is unlimited.
+
+### --prompt-file FILE
+
+Provide the initial prompt to help the translation.
+Avoid mentioning how the output should be formatted, as the tool will handle that.
+If no file is provided, a default prompt is used.
