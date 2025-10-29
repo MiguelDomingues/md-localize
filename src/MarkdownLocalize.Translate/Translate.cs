@@ -26,8 +26,8 @@ For each given text, the reply should be a JSON object as follows:
 
 ```json
 {
-    ""source"": ""The source text provided in English."",
-    ""target"": ""The localized/translated text."",
+    ""source"": ""First sentence.\nSecond sentence."",
+    ""target"": ""Primeira frase.\nSegunda frase."",
     ""success"": ""true"",
     ""reason"": """"
 }
