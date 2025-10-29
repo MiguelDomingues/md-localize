@@ -26,13 +26,13 @@ For each given text, the reply should be a JSON object as follows:
 
 ```json
 {
-    ""source"": ""The source text provided in English. \nWith line breaks preserved."",
-    ""target"": ""The localized/translated text. \nWith line breaks preserved."",
+    ""source"": ""The source text provided in English."",
+    ""target"": ""The localized/translated text."",
     ""success"": ""true"",
     ""reason"": """"
 }
 ```
-
+If the source text contains line breaks, preserve them in the `target` translation.
 If the text cannot be translated, keep the `target` value as an empty string (""), and set the `success` to false.
 In that case, provide a short sentence in the `reason` property why the text could not be translated.
 
