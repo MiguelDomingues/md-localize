@@ -81,7 +81,7 @@ public class POT
 
         IEnumerable<POTranslatorComment> translatorComments = entry.Comments.Where(c => c is POTranslatorComment).Cast<POTranslatorComment>();
 
-        if (!translatorComments.Any(c => c.Text.StartsWith(TRANSLATED_ON)))
+        if (!translatorComments.Any(c => c != null && c.Text != null && c.Text.StartsWith(TRANSLATED_ON)))
         {
             POComment comment = GenerateComment(TRANSLATED_ON + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC");
             entry.Comments.Add(comment);

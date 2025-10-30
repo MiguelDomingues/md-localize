@@ -344,8 +344,8 @@ namespace MarkdownLocalize.CLI
                             if (failureReason == null)
                             {
                                 singularEntry.Translation = translatedText;
-                                POT.UpdateTranslatedOnComment(singularEntry);
                                 Log($"Translation [{targetLanguage}]: {singularEntry.Key.Id} >>> {singularEntry.Translation}");
+                                POT.UpdateTranslatedOnComment(singularEntry);
                             }
                             else
                             {
