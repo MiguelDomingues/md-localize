@@ -84,9 +84,29 @@ public class POT
         if (!translatorComments.Any(c => c != null && c.Text != null && c.Text.StartsWith(TRANSLATED_ON)))
         {
             POComment comment = GenerateComment(TRANSLATED_ON + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC");
-            entry.Comments.Add(comment);
+            entry.Comments = new List<POComment>() { comment }.Concat(entry.Comments).ToList();
         }
 
+    }
+
+    public static void CopyTranslatedOnComment(IPOEntry source, IPOEntry target, bool addIfMissing)
+    {
+        if (source.Comments == null)
+            return;
+
+        IEnumerable<POTranslatorComment> translatorComments = source.Comments.Where(c => c is POTranslatorComment tc && tc != null && tc.Text != null && tc.Text.StartsWith(TRANSLATED_ON)).Cast<POTranslatorComment>();
+
+        if (target.Comments == null)
+            target.Comments = new List<POComment>();
+
+        if (translatorComments.Count() == 0)
+        {
+            if (addIfMissing)
+                UpdateTranslatedOnComment(target);
+            return;
+        }
+
+        target.Comments = translatorComments.Concat(target.Comments).ToList();
     }
 
     private static POComment GenerateComment(string tc)

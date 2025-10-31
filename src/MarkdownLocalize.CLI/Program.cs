@@ -327,10 +327,12 @@ namespace MarkdownLocalize.CLI
                         {
                             if (existingCatalog != null)
                             {
-                                var existingTranslation = existingCatalog.GetTranslation(entry.Key);
-                                if (!string.IsNullOrEmpty(existingTranslation.Trim()))
+                                var existingTranslation = existingCatalog.TryGetValue(entry.Key, out var translation) ? translation : null;
+                                if (existingTranslation != null && existingTranslation is POSingularEntry translationSingularEntry && !string.IsNullOrEmpty(translationSingularEntry.Translation.Trim()))
                                 {
-                                    singularEntry.Translation = existingTranslation;
+                                    singularEntry.Translation = translationSingularEntry.Translation;
+                                    POT.CopyTranslatedOnComment(translationSingularEntry, singularEntry, true);
+
                                     continue;
                                 }
                             }
