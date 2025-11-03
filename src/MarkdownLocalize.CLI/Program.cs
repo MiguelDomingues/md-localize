@@ -443,10 +443,13 @@ namespace MarkdownLocalize.CLI
                 if (path != "")
                     Directory.CreateDirectory(path);
                 string before = File.Exists(outputFile) ? File.ReadAllText(outputFile) : "";
-                Log($"Writing to {outputFile}...");
-                File.WriteAllText(outputFile, pot);
-                if (RemainingFiles > 0 && before != pot)
-                    RemainingFiles--;
+                if (before != pot)
+                {
+                    Log($"Writing to {outputFile}...");
+                    File.WriteAllText(outputFile, pot);
+                    if (RemainingFiles > 0)
+                        RemainingFiles--;
+                }
             }
         }
     }
