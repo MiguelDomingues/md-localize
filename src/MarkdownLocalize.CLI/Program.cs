@@ -162,7 +162,9 @@ namespace MarkdownLocalize.CLI
                 return;
             }
             string searchPattern = "*.md";
-            foreach (string f in Directory.GetFiles(input, searchPattern))
+            string[] files = Directory.GetFiles(input, searchPattern);
+            Array.Sort(files);
+            foreach (string f in files)
             {
                 string filename = Path.GetFileName(f);
                 string outputFile = Path.Combine(output, filename);
@@ -178,7 +180,9 @@ namespace MarkdownLocalize.CLI
                     DoFile(f, outputFile, this.POTFile);
             }
 
-            foreach (string d in Directory.GetDirectories(input))
+            string[] dirs = Directory.GetDirectories(input);
+            Array.Sort(dirs);
+            foreach (string d in dirs)
             {
                 Log($"Scanning {Path.GetRelativePath(Directory.GetCurrentDirectory(), d)}...");
                 string dirname = Path.GetFileName(d);
