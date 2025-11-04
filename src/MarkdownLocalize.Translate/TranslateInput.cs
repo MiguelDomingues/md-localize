@@ -1,11 +1,12 @@
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace MarkdownLocalize;
 
 
 struct TranslateInput
 {
-    [JsonPropertyName("source")]
+    [JsonProperty(PropertyName = "source")]
     public string Source { get; set; }
 }
 
