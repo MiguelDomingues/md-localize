@@ -161,7 +161,7 @@ namespace MarkdownLocalize.CLI
                 Console.WriteLine("Reached maximum number of files to process.");
                 return;
             }
-            string searchPattern = "*.md";
+            string searchPattern = this.Action == ACTION_PO_TRANSLATE ? "*.pot" : "*.md";
             string[] files = Directory.GetFiles(input, searchPattern);
             Array.Sort(files);
             foreach (string f in files)
@@ -169,10 +169,13 @@ namespace MarkdownLocalize.CLI
                 string filename = Path.GetFileName(f);
                 string outputFile = Path.Combine(output, filename);
                 if (this.Action == ACTION_PO_TRANSLATE)
-                    outputFile = Path.ChangeExtension(outputFile, ".po");
-                if ((this.POTFile == "" || this.POTFile == null) && poDirectory != null)
                 {
-                    string extension = this.Action == ACTION_GENERATE_POT || this.Action == ACTION_PO_TRANSLATE ? ".pot" : ".po";
+                    outputFile = Path.ChangeExtension(outputFile, ".po");
+                    DoFile(f, outputFile, outputFile);
+                }
+                else if ((this.POTFile == "" || this.POTFile == null) && poDirectory != null)
+                {
+                    string extension = this.Action == ACTION_GENERATE_POT ? ".pot" : ".po";
                     string poFile = Path.Combine(poDirectory, Path.ChangeExtension(filename, extension));
                     DoFile(f, outputFile, poFile);
                 }
@@ -225,16 +228,8 @@ namespace MarkdownLocalize.CLI
                     GeneratePOT(input, poFile);
                     break;
                 case ACTION_PO_TRANSLATE:
-                    if (File.Exists(poFile) || IgnoreMissingPO)
-                    {
-                        Log($"Translating {poFile} to {Locale}...");
-                        AITranslate(poFile, output, Locale);
-                    }
-                    else
-                    {
-                        string relativePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), poFile);
-                        Log("Missing " + relativePath + " file. Skipping...");
-                    }
+                    Log($"Translating {poFile} to {Locale}...");
+                    AITranslate(input, output, Locale);
                     break;
                 case ACTION_TRANSLATE:
                     if (File.Exists(poFile) || IgnoreMissingPO)
