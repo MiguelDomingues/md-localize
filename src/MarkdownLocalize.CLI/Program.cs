@@ -313,7 +313,15 @@ namespace MarkdownLocalize.CLI
         private void AITranslate(string poFile, string outputFile, string targetLanguage)
         {
             string pot = File.ReadAllText(poFile);
-            var existingCatalog = File.Exists(outputFile) ? POT.Load(File.ReadAllText(outputFile)) : null;
+            POCatalog existingCatalog = null;
+            try
+            {
+                existingCatalog = File.Exists(outputFile) ? POT.Load(File.ReadAllText(outputFile)) : null;
+            }
+            catch (Exception ex)
+            {
+                Log($"Error loading existing catalog: {ex.Message}. Will ignore existing translations.");
+            }
             var catalog = POT.Load(pot);
             Translator ModelTranslator = null;
 
